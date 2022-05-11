@@ -1,8 +1,9 @@
-package me.kzaman.notification_forward.ui.view
+package me.kzaman.notification_forward.ui
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,8 @@ class ApplicationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.d("Message", "Start")
+
         recyclerView = findViewById(R.id.appList)
 
         val pm = packageManager
@@ -37,11 +40,13 @@ class ApplicationActivity : AppCompatActivity() {
             )
             applicationModel.add(item)
         }
+        Log.d("Message", packages.toString())
 
         applicationAdapter = ApplicationAdapter(applicationModel, applicationContext)
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = applicationAdapter
         }
+        Log.d("Message", "Done")
     }
 }

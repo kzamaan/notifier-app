@@ -1,4 +1,4 @@
-package me.kzaman.notification_forward.ui.view.fragments
+package me.kzaman.notification_forward.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,7 @@ import me.kzaman.notification_forward.base.BaseFragment
 import me.kzaman.notification_forward.database.SharedPreferenceManager
 import me.kzaman.notification_forward.databinding.FragmentLoginBinding
 import me.kzaman.notification_forward.network.Resource
-import me.kzaman.notification_forward.ui.view.activities.DashboardActivity
+import me.kzaman.notification_forward.ui.activities.DashboardActivity
 import me.kzaman.notification_forward.ui.viewModel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import me.kzaman.notification_forward.utils.LoadingUtils

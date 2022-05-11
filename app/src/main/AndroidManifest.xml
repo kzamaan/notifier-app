@@ -18,16 +18,16 @@
         tools:targetApi="m">
 
         <activity
-            android:name=".ui.view.activities.SettingsActivity"
+            android:name=".ui.activities.SettingsActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.view.activities.DashboardActivity"
+            android:name=".ui.activities.DashboardActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.view.activities.AuthActivity"
+            android:name=".ui.activities.AuthActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.view.ApplicationActivity"
+            android:name=".ui.ApplicationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

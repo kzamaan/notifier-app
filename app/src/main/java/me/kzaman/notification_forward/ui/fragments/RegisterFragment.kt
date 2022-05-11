@@ -1,4 +1,4 @@
-package me.kzaman.notification_forward.ui.view.fragments
+package me.kzaman.notification_forward.ui.fragments
 
 import android.os.Bundle
 import me.kzaman.notification_forward.R

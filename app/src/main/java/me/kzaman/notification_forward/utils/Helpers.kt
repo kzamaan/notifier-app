@@ -26,8 +26,8 @@ import com.google.gson.GsonBuilder
 import me.kzaman.notification_forward.R
 import me.kzaman.notification_forward.data.model.ProductElement
 import me.kzaman.notification_forward.network.Resource
-import me.kzaman.notification_forward.ui.view.activities.AuthActivity
-import me.kzaman.notification_forward.ui.view.activities.DashboardActivity
+import me.kzaman.notification_forward.ui.activities.AuthActivity
+import me.kzaman.notification_forward.ui.activities.DashboardActivity
 
 
 fun View.visible(isVisible: Boolean) {

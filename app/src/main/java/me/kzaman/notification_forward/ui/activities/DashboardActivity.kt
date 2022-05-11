@@ -1,4 +1,4 @@
-package me.kzaman.notification_forward.ui.view.activities
+package me.kzaman.notification_forward.ui.activities
 
 import android.os.Bundle
 import androidx.activity.viewModels
