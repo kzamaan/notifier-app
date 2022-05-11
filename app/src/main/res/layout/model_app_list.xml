@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_line"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/ten"
+    android:paddingTop="@dimen/ten"
+    android:paddingBottom="@dimen/ten"
+    android:weightSum="5"
+    tools:ignore="RtlSymmetry">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UseCompoundDrawables">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_app_icon"
+            android:layout_width="@dimen/large_image_size"
+            android:layout_height="@dimen/large_image_size"
+            android:src="@drawable/img_avatar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_customer_name"
+            style="@style/RobotoRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/author_name"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/fourteen" />
+
+        <TextView
+            android:id="@+id/tv_location"
+            style="@style/RobotoRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/two"
+            android:drawablePadding="@dimen/five"
+            android:gravity="center_vertical"
+            android:textColor="@color/childTextColor"
+            android:textSize="@dimen/twelve"
+            app:drawableTint="@color/colorPrimary"
+            tools:text="Dhaka" />
+
+    </LinearLayout>
+
+</LinearLayout>

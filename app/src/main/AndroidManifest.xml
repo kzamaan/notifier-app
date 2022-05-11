@@ -27,7 +27,7 @@
             android:name=".ui.view.activities.AuthActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.view.MainActivity"
+            android:name=".ui.view.ApplicationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
