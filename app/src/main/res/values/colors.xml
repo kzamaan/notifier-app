@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#026CD1</color>
+    <color name="colorPrimaryDark">#00509C</color>
+    <color name="colorAccent">#51AAFF</color>
+    <color name="demo_mood">#FF9800</color>
+
+    <!--colors for modern ui-->
+    <color name="whiteTextColor">#ffffff</color>
+    <color name="primaryTextColor">#2661FA</color>
+    <color name="loginBkColor">#f0f0f0</color>
+
+    <color name="dividerColor">#FAF7ED</color>
+    <color name="whiteBackground">#FFFFFF</color>
+    <color name="offWhiteBackground">#FAF7ED</color>
+
+    <color name="colorA">#004493</color>
+    <color name="colorB">#7EC170</color>
+    <color name="colorC">#F7AC44</color>
+    <color name="colorE">#26026CD1</color>
+    <color name="colorF">#FB32C5</color>
+    <color name="transparent">#33FFFFFF</color>
+
+    <color name="drawableIconColor">#393535</color>
+    <color name="textColor">#393535</color>
+    <color name="childTextColor">#696A6A</color>
+    <color name="unread_notification_bg">#0D717171</color>
+
+    <!--colors for card-->
+    <color name="whiteCardColor">#E2EDFA</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="badge_icon">#FF6600</color>
+
+    <!-- toast background color -->
+    <color name="success_color">#2CD994</color>
+    <color name="success_bg_color">#3358F0B3</color>
+    <color name="error_color">#FF5151</color>
+    <color name="error_bg_color">#33DC5959</color>
+    <color name="warning_color">#FF6B00</color>
+    <color name="warning_bg_color">#33E6823A</color>
+    <color name="info_color">#4693FF</color>
+    <color name="info_bg_color">#33528AD8</color>
+    <color name="toast_view_color">#282F39</color>
+
+    <color name="cash_type_customer">#8900FF</color>
+    <color name="cash_type_customer_bg">#1A8900FF</color>
+    <color name="credit_type_customer">#FF1178</color>
+    <color name="credit_type_customer_bg">#1AC568A5</color>
+</resources>

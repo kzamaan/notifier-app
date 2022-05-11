@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:viewportWidth="280"
+    android:viewportHeight="60"
+    android:width="280dp"
+    android:height="60dp"
+    tools:ignore="VectorRaster">
+    <path
+        android:pathData="M30 0H250A30 30 0 0 1 280 30V30A30 30 0 0 1 250 60H30A30 30 0 0 1 0 30V30A30 30 0 0 1 30 0Z"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M30 0.5H250A29.5 29.5 0 0 1 279.5 30V30A29.5 29.5 0 0 1 250 59.5H30A29.5 29.5 0 0 1 0.5 30V30A29.5 29.5 0 0 1 30 0.5Z"
+        android:strokeColor="#D1D1D1"
+        android:strokeWidth="1" />
+</vector>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="loginHeader">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/thirty</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="imageRoundedFull">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="RobotoRegular" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="RobotoMedium" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="RobotoBold" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="RobotoLight" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:fontFamily">@font/roboto_light</item>
+    </style>
+</resources>

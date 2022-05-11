@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="@dimen/ten"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_search_24"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/iv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sixteen"
+            android:padding="@dimen/five"
+            android:text="@string/no_data_found"
+            style="@style/RobotoMedium"
+            android:layout_marginTop="@dimen/ten"
+            android:textColor="@color/black"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/fifteen"
+            android:padding="@dimen/five"
+            android:text="@string/try_again"
+            style="@style/RobotoRegular"
+            android:textColor="@color/colorPrimary"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/fifteen"
+            android:paddingStart="@dimen/twentyFive"
+            android:paddingEnd="@dimen/twentyFive"
+            android:paddingTop="@dimen/five"
+            android:paddingBottom="@dimen/five"
+            android:text="@string/retry"
+            android:visibility="gone"
+            style="@style/RobotoRegular"
+            android:background="@drawable/bg_primary_button"
+            android:layout_marginTop="@dimen/ten"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
