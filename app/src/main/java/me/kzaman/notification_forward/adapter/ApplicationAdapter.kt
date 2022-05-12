@@ -2,6 +2,7 @@ package me.kzaman.notification_forward.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 import me.kzaman.notification_forward.R
 import me.kzaman.notification_forward.data.model.ApplicationModel
-import java.util.*
+import me.kzaman.notification_forward.utils.goToNextFragment
+import java.util.Locale
 import kotlin.collections.ArrayList
 
 class ApplicationAdapter(
@@ -49,7 +51,13 @@ class ApplicationAdapter(
         holder.appIcon.setImageDrawable(model.appIcon)
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(mContext, "Name: ${model.appName}", Toast.LENGTH_SHORT).show()
+            val bundle = Bundle()
+            bundle.putString("packageName", model.packageName)
+            goToNextFragment(
+                R.id.action_applicationListFragment_to_applicationDetailFragment,
+                holder.itemView,
+                bundle
+            )
         }
     }
 

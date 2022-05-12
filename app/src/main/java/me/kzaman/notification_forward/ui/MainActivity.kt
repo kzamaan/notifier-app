@@ -39,6 +39,10 @@ class MainActivity : BaseActivity() {
         rlToolbar = findViewById(R.id.toolbar_root)
         tvTitle = findViewById(R.id.tv_toolbar_title)
         ivBackButton = findViewById(R.id.iv_back_button)
+
+        ivBackButton.setOnClickListener {
+            onBackPressed()
+        }
         // checking for last page
         // if last page home screen will be launched
         if (!isNotificationServiceEnabled()) {
@@ -83,6 +87,15 @@ class MainActivity : BaseActivity() {
     override fun showToolbar(isBackButton: Boolean) {
         ivBackButton.visible(isBackButton)
         rlToolbar.visibility = View.VISIBLE
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+            overridePendingTransition(0, R.anim.animation_slide_out_right)
+        }
     }
 
     private fun isNotificationServiceEnabled(): Boolean {
