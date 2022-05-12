@@ -1,4 +1,4 @@
-package me.kzaman.notification_forward.ui
+package me.kzaman.notification_forward.services
 
 import android.app.Notification
 import android.os.Bundle
