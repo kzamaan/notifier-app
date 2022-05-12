@@ -1,58 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.ApplicationActivity">
+    tools:context=".ui.MainActivity">
 
-    <androidx.cardview.widget.CardView
+    <include
+        android:id="@+id/toolbar_root"
+        layout="@layout/layout_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_view"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dividerHeight"
-        app:cardElevation="@dimen/zero">
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_root"
+        app:navGraph="@navigation/app_list_graph" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fifteen"
-            android:layout_marginTop="@dimen/five"
-            android:layout_marginEnd="@dimen/fifteen"
-            android:layout_marginBottom="@dimen/five">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_search"
-                style="@style/RobotoRegular"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_white_input"
-                android:drawableStart="@drawable/ic_baseline_search_24"
-                android:gravity="center_vertical"
-                android:hint="@string/search"
-                android:inputType="text"
-                android:padding="@dimen/eight"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/fifteen" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_cancel_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/five"
-                android:padding="@dimen/eight"
-                android:src="@drawable/ic_baseline_close_24"
-                android:visibility="invisible" />
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/appList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/model_app_list" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

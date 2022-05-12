@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_list_graph"
+    app:startDestination="@id/applicationListFragment">
+
+    <fragment
+        android:id="@+id/applicationListFragment"
+        android:name="me.kzaman.notification_forward.ui.fragments.ApplicationListFragment"
+        android:label="ApplicationListFragment"
+        tools:layout="@layout/fragment_application_list" />
+</navigation>

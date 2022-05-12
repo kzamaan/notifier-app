@@ -1,87 +1,48 @@
 package me.kzaman.notification_forward.ui
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import me.kzaman.notification_forward.R
-import me.kzaman.notification_forward.adapter.ApplicationAdapter
-import me.kzaman.notification_forward.data.model.ApplicationModel
-import me.kzaman.notification_forward.utils.hideSoftKeyboard
+import me.kzaman.notification_forward.base.BaseActivity
+import me.kzaman.notification_forward.utils.visible
 
 
 @AndroidEntryPoint
-class ApplicationActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+    private lateinit var rlToolbar: RelativeLayout
+    private lateinit var tvTitle: TextView
+    private lateinit var ivBackButton: ImageView
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var applicationAdapter: ApplicationAdapter
-    private lateinit var etSearch: AppCompatEditText
-    private lateinit var ivCancelSearch: AppCompatImageView
-
-    @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initializeApp()
+    }
 
-        recyclerView = findViewById(R.id.appList)
-        etSearch = findViewById(R.id.et_search)
-        ivCancelSearch = findViewById(R.id.iv_cancel_search)
+    override fun initializeApp() {
 
+        rlToolbar = findViewById(R.id.toolbar_root)
+        tvTitle = findViewById(R.id.tv_toolbar_title)
+        ivBackButton = findViewById(R.id.iv_back_button)
         // checking for last page
         // if last page home screen will be launched
         if (!isNotificationServiceEnabled()) {
             startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
-        }
-
-        //get a list of installed apps.
-        val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-        val applicationModel = ArrayList<ApplicationModel>()
-        packages.forEach { packageInfo ->
-            val item = ApplicationModel(
-                appName = packageInfo.loadLabel(packageManager).toString(),
-                packageName = packageInfo.packageName,
-                appIcon = packageInfo.loadIcon(packageManager)
-            )
-            applicationModel.add(item)
-        }
-
-        applicationAdapter = ApplicationAdapter(applicationModel, this)
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = applicationAdapter
-        }
-
-        etSearch.addTextChangedListener {
-            if (it.isNullOrEmpty()) {
-                ivCancelSearch.visibility = View.GONE
-            } else {
-                ivCancelSearch.visibility = View.VISIBLE
-            }
-            applicationAdapter.filter.filter(it)
-        }
-
-        ivCancelSearch.setOnClickListener {
-            etSearch.text = null
-            hideSoftKeyboard(this, etSearch)
-            it.visibility = View.GONE
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -109,6 +70,19 @@ class ApplicationActivity : AppCompatActivity() {
 
         val notificationManager = NotificationManagerCompat.from(this)
         notificationManager.notify(1000, builder.build())
+    }
+
+    override fun setToolbarTitle(title: String) {
+        setToolbarTitle(title, tvTitle)
+    }
+
+    override fun hideToolbar() {
+        rlToolbar.visibility = View.GONE
+    }
+
+    override fun showToolbar(isBackButton: Boolean) {
+        ivBackButton.visible(isBackButton)
+        rlToolbar.visibility = View.VISIBLE
     }
 
     private fun isNotificationServiceEnabled(): Boolean {
