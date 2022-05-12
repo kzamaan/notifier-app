@@ -3,11 +3,13 @@ package me.kzaman.notification_forward.ui.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import dagger.hilt.android.AndroidEntryPoint
 import me.kzaman.notification_forward.R
 import me.kzaman.notification_forward.base.BaseFragment
 import me.kzaman.notification_forward.databinding.FragmentApplicationDetailBinding
 import me.kzaman.notification_forward.ui.MainActivity
 
+@AndroidEntryPoint
 class ApplicationDetailFragment : BaseFragment<FragmentApplicationDetailBinding>() {
 
     private lateinit var binding: FragmentApplicationDetailBinding
@@ -33,7 +35,10 @@ class ApplicationDetailFragment : BaseFragment<FragmentApplicationDetailBinding>
         (activity as MainActivity).setToolbarTitle("Application Detail")
 
         val packageName = arguments?.get("packageName")
-        binding.textView.text = "Package: $packageName"
+        val packageManager = (activity as MainActivity).packageManager
+
+        val applicationInfo = packageManager.getApplicationInfo(packageName.toString(), 0)
+        binding.textView.text = applicationInfo.toString()
     }
 
 }

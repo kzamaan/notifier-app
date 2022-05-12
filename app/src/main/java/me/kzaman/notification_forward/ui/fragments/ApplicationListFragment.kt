@@ -3,6 +3,7 @@ package me.kzaman.notification_forward.ui.fragments
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,5 +76,9 @@ class ApplicationListFragment : BaseFragment<FragmentApplicationListBinding>() {
             hideSoftKeyboard(mContext, binding.etSearch)
             it.visibility = View.GONE
         }
+    }
+
+    fun displayNotificationDetail(androidTitle: String) {
+        Log.d("NotificationDetail", androidTitle)
     }
 }
