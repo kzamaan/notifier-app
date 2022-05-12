@@ -1,6 +1,5 @@
 package me.kzaman.notification_forward.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 import me.kzaman.notification_forward.R
 import me.kzaman.notification_forward.data.model.ApplicationModel
-import me.kzaman.notification_forward.utils.loadImage
 import kotlin.collections.ArrayList
 
 open class ApplicationAdapter(
@@ -34,7 +32,6 @@ open class ApplicationAdapter(
         LayoutInflater.from(parent.context).inflate(R.layout.model_app_list, parent, false)
     )
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = models[position]
 
@@ -43,7 +40,7 @@ open class ApplicationAdapter(
         holder.appIcon.setImageDrawable(model.appIcon)
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(mContext, "Clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "Name: ${model.appName}", Toast.LENGTH_SHORT).show()
         }
     }
 
