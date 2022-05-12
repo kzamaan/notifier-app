@@ -12,12 +12,8 @@ class ApplicationNotificationListener : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         val mNotification: Notification = sbn!!.notification
         val extras: Bundle = mNotification.extras
-//        val intent = Intent("me.kzaman.notification_forward")
-//        intent.putExtras(mNotification.extras)
-//        sendBroadcast(intent)
-//        val mActions: Array<Notification.Action> = mNotification.actions
-        Log.d("Notification", extras.getString("android.title").toString())
-        Log.d("Notification", extras.getString("android.text").toString())
+        Log.d("Notification title", extras.getString("android.title").toString())
+        Log.d("Notification text", extras.getString("android.text").toString())
         Log.d("Notification", sbn.packageName)
     }
 

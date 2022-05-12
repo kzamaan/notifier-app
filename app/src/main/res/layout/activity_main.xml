@@ -28,7 +28,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_white_input"
                 android:drawableStart="@drawable/ic_baseline_search_24"
-                android:focusable="false"
                 android:gravity="center_vertical"
                 android:hint="@string/search"
                 android:inputType="text"
