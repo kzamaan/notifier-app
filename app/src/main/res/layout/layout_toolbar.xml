@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     android:minHeight="?attr/actionBarSize"
-    android:orientation="horizontal">
+    android:id="@+id/toolbar">
 
     <RelativeLayout
         android:layout_width="match_parent"
