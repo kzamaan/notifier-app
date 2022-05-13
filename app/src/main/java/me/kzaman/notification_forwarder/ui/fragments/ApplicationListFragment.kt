@@ -14,12 +14,14 @@ import me.kzaman.notification_forwarder.data.model.ApplicationModel
 import me.kzaman.notification_forwarder.databinding.FragmentApplicationListBinding
 import me.kzaman.notification_forwarder.ui.MainActivity
 import me.kzaman.notification_forwarder.utils.hideSoftKeyboard
+import java.text.Collator
 
 @AndroidEntryPoint
 class ApplicationListFragment : BaseFragment<FragmentApplicationListBinding>() {
 
     private lateinit var binding: FragmentApplicationListBinding
     private lateinit var applicationAdapter: ApplicationAdapter
+    private val sCollator: Collator = Collator.getInstance()
 
     override val layoutId: Int = R.layout.fragment_application_list
 
@@ -53,6 +55,10 @@ class ApplicationListFragment : BaseFragment<FragmentApplicationListBinding>() {
                 appIcon = packageInfo.loadIcon(packageManager)
             )
             applicationModel.add(item)
+        }
+
+        applicationModel.sortWith { o1, o2 ->
+            sCollator.compare(o1.appName, o2.appName)
         }
 
         applicationAdapter = ApplicationAdapter(applicationModel, mContext)
