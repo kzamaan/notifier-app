@@ -77,8 +77,4 @@ class ApplicationListFragment : BaseFragment<FragmentApplicationListBinding>() {
             it.visibility = View.GONE
         }
     }
-
-    fun displayNotificationDetail(androidTitle: String) {
-        Log.d("NotificationDetail", androidTitle)
-    }
 }
