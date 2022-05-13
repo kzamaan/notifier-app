@@ -10,7 +10,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "me.kzaman.notification_forward"
+        applicationId "me.kzaman.notification_forwarder"
         minSdk 22
         targetSdk 32
         versionCode 1

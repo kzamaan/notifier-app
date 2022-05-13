@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/applicationListFragment"
-        android:name="me.kzaman.notification_forward.ui.fragments.ApplicationListFragment"
+        android:name="me.kzaman.notification_forwarder.ui.fragments.ApplicationListFragment"
         android:label="ApplicationListFragment"
         tools:layout="@layout/fragment_application_list">
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/applicationDetailFragment"
-        android:name="me.kzaman.notification_forward.ui.fragments.ApplicationDetailFragment"
+        android:name="me.kzaman.notification_forwarder.ui.fragments.ApplicationDetailFragment"
         android:label="ApplicationDetailFragment"
         tools:layout="@layout/fragment_application_detail" />
 </navigation>
