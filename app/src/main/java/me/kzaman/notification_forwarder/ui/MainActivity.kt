@@ -25,18 +25,17 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initializeApp()
-    }
-
-    override fun initializeApp() {
 
         rlToolbar = findViewById(R.id.toolbar_root)
         tvTitle = findViewById(R.id.tv_toolbar_title)
         ivBackButton = findViewById(R.id.iv_back_button)
-
         ivBackButton.setOnClickListener {
             onBackPressed()
         }
+        initializeApp()
+    }
+
+    override fun initializeApp() {
         // checking for last page
         // if last page home screen will be launched
         if (!isNotificationServiceEnabled()) {
