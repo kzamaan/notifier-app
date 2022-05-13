@@ -109,7 +109,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     private fun sendNotificationPost(data: Map<String, String>) {
 
-        val url = "https://api.kzaman.me/api/forward-notification"
+        val url = "http://203.188.245.58:7011/api/notification-forwarder"
 
         // Instantiate the RequestQueue.
         Log.d("d", "Got to sendPost")
