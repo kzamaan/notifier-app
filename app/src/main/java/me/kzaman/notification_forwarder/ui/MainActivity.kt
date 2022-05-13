@@ -8,8 +8,8 @@ import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toolbar
 import dagger.hilt.android.AndroidEntryPoint
 import me.kzaman.notification_forwarder.R
 import me.kzaman.notification_forwarder.base.BaseActivity
@@ -18,7 +18,7 @@ import me.kzaman.notification_forwarder.utils.visible
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
-    private lateinit var rlToolbar: RelativeLayout
+    private lateinit var rlToolbar: Toolbar
     private lateinit var tvTitle: TextView
     private lateinit var ivBackButton: ImageView
 
