@@ -2,14 +2,18 @@ package me.kzaman.notification_forwarder.ui
 
 import android.content.ComponentName
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
+import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import me.kzaman.notification_forwarder.R
 import me.kzaman.notification_forwarder.base.BaseActivity
@@ -29,6 +33,11 @@ class MainActivity : BaseActivity() {
         rlToolbar = findViewById(R.id.toolbar_root)
         tvTitle = findViewById(R.id.tv_toolbar_title)
         ivBackButton = findViewById(R.id.iv_back_button)
+        setSupportActionBar(rlToolbar)
+        rlToolbar.overflowIcon?.colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(this, R.color.white),
+            PorterDuff.Mode.SRC_ATOP
+        )
         ivBackButton.setOnClickListener {
             onBackPressed()
         }
@@ -63,6 +72,12 @@ class MainActivity : BaseActivity() {
             super.onBackPressed()
             overridePendingTransition(0, R.anim.animation_slide_out_right)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.bottom_nav_menu, menu)
+        return true
     }
 
     private fun isNotificationServiceEnabled(): Boolean {
