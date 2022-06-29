@@ -66,7 +66,6 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
         if (notificationCode != OTHER_NOTIFICATIONS_CODE) {
             val params: MutableMap<String, String> = HashMap()
-            params["code"] = notificationCode.toString()
             params["app_name"] = appName
             params["package_name"] = packageName
             params["android_title"] = androidTitle
@@ -74,6 +73,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
             params["android_sub_text"] = androidSubText
             params["android_big_text"] = androidBigText
             params["android_info_text"] = androidInfoText
+            params["transaction_id"] = "722e5bb7b911f444"
 
             val current = LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
