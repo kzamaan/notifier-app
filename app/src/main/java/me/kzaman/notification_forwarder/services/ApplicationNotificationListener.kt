@@ -24,7 +24,6 @@ class ApplicationNotificationListener : NotificationListenerService() {
         const val FACEBOOK_PACK_NAME = "com.facebook.katana"
         const val FACEBOOK_MESSENGER_PACK_NAME = "com.facebook.orca"
         const val WHATSAPP_PACK_NAME = "com.whatsapp"
-        const val INSTAGRAM_PACK_NAME = "com.instagram.android"
         const val GMAIL_PACK_NAME = "com.google.android.gm"
         const val NAGAD_PACK_NAME = "com.konasl.nagad"
         const val BKASH_PACK_NAME = "com.bkash.customerapp"
@@ -33,11 +32,10 @@ class ApplicationNotificationListener : NotificationListenerService() {
         const val FACEBOOK_CODE = 1
         const val FACEBOOK_MESSENGER_CODE = 2
         const val WHATSAPP_CODE = 3
-        const val INSTAGRAM_CODE = 4
-        const val GMAIL_CODE = 5
-        const val NAGAD_CODE = 6
-        const val BKASH_CODE = 7
-        const val MESSAGE_CODE = 8
+        const val GMAIL_CODE = 4
+        const val NAGAD_CODE = 5
+        const val BKASH_CODE = 6
+        const val MESSAGE_CODE = 7
         const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 10
 
     }
@@ -73,7 +71,6 @@ class ApplicationNotificationListener : NotificationListenerService() {
             params["android_sub_text"] = androidSubText
             params["android_big_text"] = androidBigText
             params["android_info_text"] = androidInfoText
-            params["transaction_id"] = "722e5bb7b911f444"
 
             val current = LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
@@ -112,7 +109,6 @@ class ApplicationNotificationListener : NotificationListenerService() {
         return when (sbn.packageName) {
             FACEBOOK_PACK_NAME -> FACEBOOK_CODE
             FACEBOOK_MESSENGER_PACK_NAME -> FACEBOOK_MESSENGER_CODE
-            INSTAGRAM_PACK_NAME -> INSTAGRAM_CODE
             WHATSAPP_PACK_NAME -> WHATSAPP_CODE
             GMAIL_PACK_NAME -> GMAIL_CODE
             NAGAD_PACK_NAME -> NAGAD_CODE
