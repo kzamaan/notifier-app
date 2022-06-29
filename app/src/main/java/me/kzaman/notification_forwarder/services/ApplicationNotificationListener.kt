@@ -13,7 +13,9 @@ import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import java.util.HashMap;
+import com.google.firebase.database.FirebaseDatabase
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class ApplicationNotificationListener : NotificationListenerService() {
@@ -42,8 +44,10 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
 
+        val packageName = sbn!!.packageName
+        val notificationCode = matchNotificationCode(sbn)
+
         val intent = Intent("me.kzaman.notification_forwarder")
-        val notificationCode = matchNotificationCode(sbn!!)
         intent.putExtra("Notification Code", notificationCode)
 
         val mNotification: Notification = sbn.notification
@@ -54,19 +58,30 @@ class ApplicationNotificationListener : NotificationListenerService() {
         val androidBigText = extras.getString("android.bigText").toString()
         val androidInfoText = extras.getString("android.infoText").toString()
 
+        val applicationInfo = applicationContext.packageManager.getApplicationInfo(packageName, 0)
+        val appName = applicationInfo.loadLabel(applicationContext.packageManager).toString()
+
         Log.d("Notification title", androidTitle)
         Log.d("Notification text", androidText)
-        Log.d("Notification", sbn.packageName)
 
         if (notificationCode != OTHER_NOTIFICATIONS_CODE) {
             val params: MutableMap<String, String> = HashMap()
-            params["package_name"] = sbn.packageName
+            params["code"] = notificationCode.toString()
+            params["app_name"] = appName
+            params["package_name"] = packageName
             params["android_title"] = androidTitle
             params["android_text"] = androidText
             params["android_sub_text"] = androidSubText
             params["android_big_text"] = androidBigText
             params["android_info_text"] = androidInfoText
-            params["code"] = notificationCode.toString()
+
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+            val key = current.format(formatter)
+            val database =
+                FirebaseDatabase.getInstance("https://notification-forwarder-22-default-rtdb.asia-southeast1.firebasedatabase.app/")
+            val notificationRef = database.getReference("notifications")
+            notificationRef.child(key).setValue(params)
 
             sendNotificationPost(params)
             Log.d("d", "Sent broadcast")

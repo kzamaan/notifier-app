@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "794260611954",
+    "project_id": "notification-forwarder-22",
+    "storage_bucket": "notification-forwarder-22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794260611954:android:9283a3ac67598afb0373eb",
+        "android_client_info": {
+          "package_name": "me.kzaman.notification_forwarder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794260611954-4g1jsuk7haufhkn1b8apl9te6ueoh048.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuZQf3eX7kJ4xDl57gnnSJAX9y6BPkVVA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "794260611954-4g1jsuk7haufhkn1b8apl9te6ueoh048.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
