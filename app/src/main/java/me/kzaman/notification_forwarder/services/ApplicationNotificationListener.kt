@@ -36,7 +36,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
         const val NAGAD_CODE = 6
         const val BKASH_CODE = 7
         const val MESSAGE_CODE = 8
-        const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 4
+        const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 10
 
     }
 
