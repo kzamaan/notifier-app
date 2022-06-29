@@ -72,13 +72,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
             params["android_big_text"] = androidBigText
             params["android_info_text"] = androidInfoText
 
-            val current = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-            val key = current.format(formatter)
-            val database =
-                FirebaseDatabase.getInstance("https://notification-forwarder-22-default-rtdb.asia-southeast1.firebasedatabase.app/")
-            val notificationRef = database.getReference("notifications")
-            notificationRef.child(key).setValue(params)
+            // saveOnFirebase(params)
 
             sendNotificationPost(params)
             Log.d("d", "Sent broadcast")
@@ -149,5 +143,15 @@ class ApplicationNotificationListener : NotificationListenerService() {
                 }
             }
         requestQueue.add(jsonObjRequest)
+    }
+
+    private fun saveOnFirebase(data: Map<String, String>) {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+        val key = current.format(formatter)
+        val database =
+            FirebaseDatabase.getInstance("https://notification-forwarder-22-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        val notificationRef = database.getReference("notifications")
+        notificationRef.child(key).setValue(data)
     }
 }
