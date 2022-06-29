@@ -1,6 +1,7 @@
 package me.kzaman.notification_forwarder.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -43,15 +44,15 @@ class ApplicationListFragment : BaseFragment<FragmentApplicationListBinding>() {
         (activity as MainActivity).showToolbar(false) //display toolbar
         (activity as MainActivity).setToolbarTitle("Application List")
 
-        val packageManager = (mActivity as MainActivity).packageManager
-
         //get a list of installed apps.
-        val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        val intent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
+        val packageManager = (mActivity as MainActivity).packageManager
+        val packages = packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
         val applicationModel = ArrayList<ApplicationModel>()
         packages.forEach { packageInfo ->
             val item = ApplicationModel(
                 appName = packageInfo.loadLabel(packageManager).toString(),
-                packageName = packageInfo.packageName,
+                packageName = packageInfo.activityInfo.packageName,
                 appIcon = packageInfo.loadIcon(packageManager)
             )
             applicationModel.add(item)

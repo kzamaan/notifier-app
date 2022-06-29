@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import me.kzaman.notification_forwarder.database.AppDatabase
-import me.kzaman.notification_forwarder.database.dao.UserDao
+import me.kzaman.notification_forwarder.database.dao.AppDao
 import javax.inject.Singleton
 
 @Module
@@ -26,5 +26,5 @@ object RoomModule {
 
     @Singleton
     @Provides
-    fun provideOrderDAO(database: AppDatabase): UserDao = database.userDao()
+    fun provideAppDAO(database: AppDatabase): AppDao = database.appDao()
 }
