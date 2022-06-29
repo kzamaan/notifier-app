@@ -21,17 +21,12 @@ import java.time.format.DateTimeFormatter
 class ApplicationNotificationListener : NotificationListenerService() {
 
     companion object {
-        const val FACEBOOK_PACK_NAME = "com.facebook.katana"
-        const val FACEBOOK_MESSENGER_PACK_NAME = "com.facebook.orca"
-        const val WHATSAPP_PACK_NAME = "com.whatsapp"
         const val GMAIL_PACK_NAME = "com.google.android.gm"
         const val NAGAD_PACK_NAME = "com.konasl.nagad"
         const val BKASH_PACK_NAME = "com.bkash.customerapp"
-        const val MESSAGE_PACK_NAME = "com.samsung.android.messaging"
+        const val SAMSUNG_MESSAGE = "com.samsung.android.messaging"
+        const val GOOGLE_MESSAGE = "com.google.android.apps.messaging"
 
-        const val FACEBOOK_CODE = 1
-        const val FACEBOOK_MESSENGER_CODE = 2
-        const val WHATSAPP_CODE = 3
         const val GMAIL_CODE = 4
         const val NAGAD_CODE = 5
         const val BKASH_CODE = 6
@@ -101,13 +96,11 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     private fun matchNotificationCode(sbn: StatusBarNotification): Int {
         return when (sbn.packageName) {
-            FACEBOOK_PACK_NAME -> FACEBOOK_CODE
-            FACEBOOK_MESSENGER_PACK_NAME -> FACEBOOK_MESSENGER_CODE
-            WHATSAPP_PACK_NAME -> WHATSAPP_CODE
             GMAIL_PACK_NAME -> GMAIL_CODE
             NAGAD_PACK_NAME -> NAGAD_CODE
             BKASH_PACK_NAME -> BKASH_CODE
-            MESSAGE_PACK_NAME -> MESSAGE_CODE
+            SAMSUNG_MESSAGE -> MESSAGE_CODE
+            GOOGLE_MESSAGE -> MESSAGE_CODE
             else -> OTHER_NOTIFICATIONS_CODE
         }
     }
