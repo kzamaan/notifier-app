@@ -21,13 +21,11 @@ import java.time.format.DateTimeFormatter
 class ApplicationNotificationListener : NotificationListenerService() {
 
     companion object {
-        const val GMAIL_PACK_NAME = "com.google.android.gm"
         const val NAGAD_PACK_NAME = "com.konasl.nagad"
         const val BKASH_PACK_NAME = "com.bkash.customerapp"
         const val SAMSUNG_MESSAGE = "com.samsung.android.messaging"
         const val GOOGLE_MESSAGE = "com.google.android.apps.messaging"
 
-        const val GMAIL_CODE = 4
         const val NAGAD_CODE = 5
         const val BKASH_CODE = 6
         const val MESSAGE_CODE = 7
@@ -51,26 +49,26 @@ class ApplicationNotificationListener : NotificationListenerService() {
         val androidBigText = extras.getString("android.bigText").toString()
         val androidInfoText = extras.getString("android.infoText").toString()
 
-        val applicationInfo = applicationContext.packageManager.getApplicationInfo(packageName, 0)
-        val appName = applicationInfo.loadLabel(applicationContext.packageManager).toString()
+        val packageManager = applicationContext.packageManager
+        val appInfo = packageManager.getApplicationInfo(packageName, 0)
+        val appName = appInfo.loadLabel(packageManager).toString()
 
-        Log.d("Notification title", androidTitle)
-        Log.d("Notification text", androidText)
+        Log.d("notification_title", androidTitle)
+        Log.d("notification_text", androidText)
 
-        if (notificationCode != OTHER_NOTIFICATIONS_CODE) {
-            val params: MutableMap<String, String> = HashMap()
-            params["app_name"] = appName
-            params["package_name"] = packageName
-            params["android_title"] = androidTitle
-            params["android_text"] = androidText
-            params["android_sub_text"] = androidSubText
-            params["android_big_text"] = androidBigText
-            params["android_info_text"] = androidInfoText
+        if (notificationCode != OTHER_NOTIFICATIONS_CODE || appName == "Messages") {
+            Log.d("notification_text", "Notification Matched")
+            val postObject: MutableMap<String, String> = HashMap()
+            postObject["app_name"] = appName
+            postObject["package_name"] = packageName
+            postObject["android_title"] = androidTitle
+            postObject["android_text"] = androidText
+            postObject["android_sub_text"] = androidSubText
+            postObject["android_big_text"] = androidBigText
+            postObject["android_info_text"] = androidInfoText
 
-            // saveOnFirebase(params)
-
-            sendNotificationPost(params)
-            Log.d("d", "Sent broadcast")
+            // saveOnFirebase(postObject)
+            sendNotificationPost(postObject)
             sendBroadcast(intent)
         }
     }
@@ -96,7 +94,6 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     private fun matchNotificationCode(sbn: StatusBarNotification): Int {
         return when (sbn.packageName) {
-            GMAIL_PACK_NAME -> GMAIL_CODE
             NAGAD_PACK_NAME -> NAGAD_CODE
             BKASH_PACK_NAME -> BKASH_CODE
             SAMSUNG_MESSAGE -> MESSAGE_CODE
@@ -105,7 +102,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
         }
     }
 
-    private fun sendNotificationPost(data: Map<String, String>) {
+    private fun sendNotificationPost(postObject: Map<String, String>) {
 
         val url = "http://203.188.245.58:7011/api/notification-forwarder"
 
@@ -131,20 +128,20 @@ class ApplicationNotificationListener : NotificationListenerService() {
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
                     var params: Map<String, String> = HashMap()
-                    params = data
+                    params = postObject
                     return params
                 }
             }
         requestQueue.add(jsonObjRequest)
     }
 
-    private fun saveOnFirebase(data: Map<String, String>) {
+    private fun saveOnFirebase(postObject: Map<String, String>) {
         val current = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
         val key = current.format(formatter)
         val database =
             FirebaseDatabase.getInstance("https://notification-forwarder-22-default-rtdb.asia-southeast1.firebasedatabase.app/")
         val notificationRef = database.getReference("notifications")
-        notificationRef.child(key).setValue(data)
+        notificationRef.child(key).setValue(postObject)
     }
 }
