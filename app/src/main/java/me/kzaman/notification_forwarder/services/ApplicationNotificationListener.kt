@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter
 class ApplicationNotificationListener : NotificationListenerService() {
 
     companion object {
+        const val NAGAD_AGENT = "com.konasl.nagad.agent"
         const val NAGAD_PACK_NAME = "com.konasl.nagad"
         const val BKASH_PACK_NAME = "com.bkash.customerapp"
         const val SAMSUNG_MESSAGE = "com.samsung.android.messaging"
@@ -94,6 +95,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     private fun matchNotificationCode(sbn: StatusBarNotification): Int {
         return when (sbn.packageName) {
+            NAGAD_AGENT -> NAGAD_CODE
             NAGAD_PACK_NAME -> NAGAD_CODE
             BKASH_PACK_NAME -> BKASH_CODE
             SAMSUNG_MESSAGE -> MESSAGE_CODE
