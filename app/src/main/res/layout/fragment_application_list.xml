@@ -35,7 +35,8 @@
                     android:padding="@dimen/eight"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/fifteen" />
+                    android:textSize="@dimen/fifteen"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_cancel_search"
