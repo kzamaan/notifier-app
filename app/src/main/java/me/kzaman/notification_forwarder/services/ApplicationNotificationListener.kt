@@ -106,7 +106,7 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     private fun sendNotificationPost(postObject: Map<String, String>) {
 
-        val url = "http://203.188.245.58:7011/api/notification-forwarder"
+        val url = "https://softxilla.com/api/store-notification"
 
         // Instantiate the RequestQueue.
         Log.d("d", "Got to sendPost")
