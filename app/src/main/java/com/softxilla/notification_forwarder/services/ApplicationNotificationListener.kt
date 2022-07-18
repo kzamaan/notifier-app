@@ -13,22 +13,14 @@ import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.firebase.database.FirebaseDatabase
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.softxilla.notification_forwarder.network.NetworkHelper
 
 
 class ApplicationNotificationListener : NotificationListenerService() {
 
     companion object {
-        const val NAGAD_AGENT = "com.konasl.nagad.agent"
-        const val NAGAD_PACK_NAME = "com.konasl.nagad"
-        const val BKASH_PACK_NAME = "com.bkash.customerapp"
         const val SAMSUNG_MESSAGE = "com.samsung.android.messaging"
         const val GOOGLE_MESSAGE = "com.google.android.apps.messaging"
-
-        const val NAGAD_CODE = 5
-        const val BKASH_CODE = 6
         const val MESSAGE_CODE = 7
         const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 10
 
@@ -68,8 +60,13 @@ class ApplicationNotificationListener : NotificationListenerService() {
             postObject["android_big_text"] = androidBigText
             postObject["android_info_text"] = androidInfoText
 
-            // saveOnFirebase(postObject)
-            sendNotificationPost(postObject)
+            val helper = NetworkHelper(applicationContext)
+            if (helper.isNetworkConnected()) {
+                sendNotificationPost(postObject)
+                Log.d("status", "Online Connected")
+            } else {
+                Log.d("status", "Offline Connected")
+            }
             sendBroadcast(intent)
         }
     }
@@ -95,9 +92,6 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
     private fun matchNotificationCode(sbn: StatusBarNotification): Int {
         return when (sbn.packageName) {
-            NAGAD_AGENT -> NAGAD_CODE
-            NAGAD_PACK_NAME -> NAGAD_CODE
-            BKASH_PACK_NAME -> BKASH_CODE
             SAMSUNG_MESSAGE -> MESSAGE_CODE
             GOOGLE_MESSAGE -> MESSAGE_CODE
             else -> OTHER_NOTIFICATIONS_CODE
@@ -129,21 +123,9 @@ class ApplicationNotificationListener : NotificationListenerService() {
 
                 @Throws(AuthFailureError::class)
                 override fun getParams(): Map<String, String> {
-                    var params: Map<String, String> = HashMap()
-                    params = postObject
-                    return params
+                    return postObject
                 }
             }
         requestQueue.add(jsonObjRequest)
-    }
-
-    private fun saveOnFirebase(postObject: Map<String, String>) {
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-        val key = current.format(formatter)
-        val database =
-            FirebaseDatabase.getInstance("https://notification-forwarder-22-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        val notificationRef = database.getReference("notifications")
-        notificationRef.child(key).setValue(postObject)
     }
 }
