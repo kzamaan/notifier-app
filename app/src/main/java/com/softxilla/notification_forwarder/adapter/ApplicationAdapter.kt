@@ -2,7 +2,6 @@ package com.softxilla.notification_forwarder.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +9,11 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import de.hdodenhof.circleimageview.CircleImageView
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.data.model.ApplicationModel
-import com.softxilla.notification_forwarder.utils.goToNextFragment
 import java.util.Locale
 import kotlin.collections.ArrayList
 
@@ -50,13 +49,7 @@ class ApplicationAdapter(
         holder.appIcon.setImageDrawable(model.appIcon)
 
         holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("packageName", model.packageName)
-            goToNextFragment(
-                R.id.action_applicationListFragment_to_applicationDetailFragment,
-                holder.itemView,
-                bundle
-            )
+            Toast.makeText(mContext, model.appName, Toast.LENGTH_SHORT).show()
         }
     }
 
