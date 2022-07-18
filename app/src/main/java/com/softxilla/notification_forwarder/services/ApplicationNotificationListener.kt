@@ -13,6 +13,7 @@ import com.android.volley.Response
 import com.android.volley.VolleyLog
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.network.NetworkHelper
 
 
@@ -61,11 +62,27 @@ class ApplicationNotificationListener : NotificationListenerService() {
             postObject["android_info_text"] = androidInfoText
 
             val helper = NetworkHelper(applicationContext)
+            val messageDatabaseHelper = MessageDatabaseHelper(applicationContext)
             if (helper.isNetworkConnected()) {
                 sendNotificationPost(postObject)
-                Log.d("status", "Online Connected")
+                Log.d("status", "Online, Internet Available")
+                val messages = messageDatabaseHelper.getUnSyncedMessage()
+                if (messages.moveToFirst()) {
+                    do {
+                        Log.d(
+                            "TEXT_LOCAL",
+                            messages.getString(messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TEXT))
+                        )
+                    } while (messages.moveToNext())
+                }
             } else {
-                Log.d("status", "Offline Connected")
+                messageDatabaseHelper.storeMessagesSQLite(
+                    appName,
+                    packageName,
+                    androidTitle,
+                    androidText,
+                )
+                Log.d("status", "Offline, No Internet")
             }
             sendBroadcast(intent)
         }
