@@ -167,12 +167,12 @@ class ApplicationNotificationListener : NotificationListenerService() {
         val url = "https://softxilla.com/api/sync-offline-message"
         val requestQueue = Volley.newRequestQueue(this)
         Log.d("d", "Data: " + attr.data.toString())
-        Log.d("d", "Url: $url")
+        Log.d("d", "postObject: $postObject")
 
         val jsonObjRequest: StringRequest =
             object : StringRequest(Method.POST, url,
                 Response.Listener {
-                    Log.d("Response", it.toString())
+                    Log.d("sync_offline", it.toString())
                 }, Response.ErrorListener { error ->
                     VolleyLog.d("volley", "Error: " + error.message)
                     error.printStackTrace()

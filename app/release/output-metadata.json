@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "me.kzaman.notification_forwarder",
+  "applicationId": "com.softxilla.notification_forwarder",
   "variantName": "release",
   "elements": [
     {
