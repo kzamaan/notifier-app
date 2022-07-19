@@ -21,19 +21,25 @@ class MessageDatabaseHelper(
         const val CREATED_AT = "created_at"
         const val STATUS = "status"
     }
-
     override fun onCreate(db: SQLiteDatabase) {
         val sql =
             ("CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $APP_NAME TEXT, $PACKAGE_NAME TEXT, $ANDROID_TITLE TEXT, $ANDROID_TEXT TEXT, $CREATED_AT timestamp default current_timestamp, $STATUS INTEGER default 0)")
         db.execSQL(sql)
     }
-
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         val sql = "DROP TABLE IF EXISTS $TABLE_NAME"
         db.execSQL(sql)
         onCreate(db)
     }
 
+    /**
+     * Inserts a new message into the database.
+     * @param appName The name of the app that sent the message.
+     * @param packageName The package name of the app that sent the message.
+     * @param androidTitle The title of the message.
+     * @param androidText The text of the message.
+     * @return boolean.
+     */
     fun storeMessagesSQLite(
         appName: String,
         packageName: String,
@@ -51,8 +57,31 @@ class MessageDatabaseHelper(
         return true
     }
 
+    /**
+     * Get all messages from the database
+     */
     fun getUnSyncedMessage(): Cursor {
         val db = readableDatabase
         return db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $STATUS = 0", null)
+    }
+
+    /**
+     * Update the status of the message to 1 (synced)
+     */
+    fun updateMessageStatus(id: Int) {
+        val db = writableDatabase
+        val values = ContentValues()
+        values.put(STATUS, 1)
+        db.update(TABLE_NAME, values, "$ID = $id", null)
+        db.close()
+    }
+
+    /**
+     * delete message from database
+     */
+    fun deleteMessage(id: Int) {
+        val db = writableDatabase
+        db.delete(TABLE_NAME, "$ID = $id", null)
+        db.close()
     }
 }

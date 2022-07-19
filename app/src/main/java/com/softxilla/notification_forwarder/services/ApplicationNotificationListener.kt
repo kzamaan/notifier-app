@@ -15,6 +15,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.network.NetworkHelper
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 class ApplicationNotificationListener : NotificationListenerService() {
@@ -67,20 +69,35 @@ class ApplicationNotificationListener : NotificationListenerService() {
                 sendNotificationPost(postObject)
                 Log.d("status", "Online, Internet Available")
                 val messages = messageDatabaseHelper.getUnSyncedMessage()
+                val jsonArray = JSONArray()
                 if (messages.moveToFirst()) {
                     do {
-                        Log.d(
-                            "TEXT_LOCAL",
-                            messages.getString(messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TEXT))
-                        )
+                        val messageObject = JSONObject()
+                        val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
+                        val locAppName = messages.getColumnIndex(MessageDatabaseHelper.APP_NAME)
+                        val locPackage = messages.getColumnIndex(MessageDatabaseHelper.PACKAGE_NAME)
+                        val locTitle = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TITLE)
+                        val locText = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TEXT)
+                        val createdAt = messages.getColumnIndex(MessageDatabaseHelper.CREATED_AT)
+                        messageObject.put("app_name", messages.getString(locAppName))
+                        messageObject.put("package_name", messages.getString(locPackage))
+                        messageObject.put("android_title", messages.getString(locTitle))
+                        messageObject.put("android_text", messages.getString(locText))
+                        messageObject.put("created_at", messages.getString(createdAt))
+                        jsonArray.put(messageObject)
+                        messageDatabaseHelper.updateMessageStatus(messages.getInt(rowId))
                     } while (messages.moveToNext())
+
+                    val offlineMessageObject: MutableMap<String, String> = HashMap()
+                    offlineMessageObject["messages"] = jsonArray.toString()
+                    syncOfflineMessage(offlineMessageObject)
                 }
             } else {
                 messageDatabaseHelper.storeMessagesSQLite(
                     appName,
                     packageName,
                     androidTitle,
-                    androidText,
+                    androidText
                 )
                 Log.d("status", "Offline, No Internet")
             }
@@ -125,6 +142,32 @@ class ApplicationNotificationListener : NotificationListenerService() {
         Log.d("d", "Data: " + attr.data.toString())
         Log.d("d", "Url: $url")
 
+
+        val jsonObjRequest: StringRequest =
+            object : StringRequest(Method.POST, url,
+                Response.Listener {
+                    Log.d("Response", it.toString())
+                }, Response.ErrorListener { error ->
+                    VolleyLog.d("volley", "Error: " + error.message)
+                    error.printStackTrace()
+                }) {
+                override fun getBodyContentType(): String {
+                    return "application/x-www-form-urlencoded; charset=UTF-8"
+                }
+
+                @Throws(AuthFailureError::class)
+                override fun getParams(): Map<String, String> {
+                    return postObject
+                }
+            }
+        requestQueue.add(jsonObjRequest)
+    }
+
+    private fun syncOfflineMessage(postObject: Map<String, String>) {
+        val url = "https://softxilla.com/api/sync-offline-message"
+        val requestQueue = Volley.newRequestQueue(this)
+        Log.d("d", "Data: " + attr.data.toString())
+        Log.d("d", "Url: $url")
 
         val jsonObjRequest: StringRequest =
             object : StringRequest(Method.POST, url,
