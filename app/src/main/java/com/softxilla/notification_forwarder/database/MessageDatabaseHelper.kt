@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.time.LocalDateTime
 
 const val DATABASE_NAME = "notifications"
 const val TABLE_NAME = "text_messages"
@@ -52,6 +53,7 @@ class MessageDatabaseHelper(
         values.put(PACKAGE_NAME, packageName)
         values.put(ANDROID_TITLE, androidTitle)
         values.put(ANDROID_TEXT, androidText)
+        values.put(CREATED_AT, LocalDateTime.now().toString())
         db.insert(TABLE_NAME, null, values)
         db.close()
         return true
