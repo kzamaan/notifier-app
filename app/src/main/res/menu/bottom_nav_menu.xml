@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/applicationListFragment"
-        android:title="Application"
-        android:icon="@drawable/ic_baseline_android_24"/>
+        android:id="@+id/syncMessage"
+        android:icon="@drawable/ic_baseline_sync_24"
+        android:title="Sync"
+        app:showAsAction="always" />
     <item
         android:id="@+id/historyFragment"
-        android:title="History"
-        android:icon="@drawable/ic_baseline_history_24"/>
+        android:icon="@drawable/ic_baseline_history_24"
+        android:title="History" />
     <item
         android:id="@+id/settingsFragment"
-        android:title="Settings"
-        android:icon="@drawable/ic_baseline_settings_24"/>
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Settings" />
 </menu>
