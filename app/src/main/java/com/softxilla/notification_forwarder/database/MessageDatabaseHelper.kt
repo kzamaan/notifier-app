@@ -12,7 +12,7 @@ const val TABLE_NAME = "text_messages"
 
 class MessageDatabaseHelper(
     context: Context
-) : SQLiteOpenHelper(context, DATABASE_NAME, null, 4) {
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, 5) {
     companion object {
         const val ID = "id"
         const val APP_NAME = "app_name"
@@ -24,7 +24,7 @@ class MessageDatabaseHelper(
     }
     override fun onCreate(db: SQLiteDatabase) {
         val sql =
-            ("CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $APP_NAME TEXT, $PACKAGE_NAME TEXT, $ANDROID_TITLE TEXT, $ANDROID_TEXT TEXT, $CREATED_AT timestamp default current_timestamp, $STATUS INTEGER default 0)")
+            ("CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $APP_NAME TEXT, $PACKAGE_NAME TEXT, $ANDROID_TITLE TEXT, $ANDROID_TEXT TEXT, $CREATED_AT TEXT, $STATUS INTEGER default 0)")
         db.execSQL(sql)
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
