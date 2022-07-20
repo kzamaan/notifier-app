@@ -1,9 +1,11 @@
 package com.softxilla.notification_forwarder.ui
 
+import android.app.Dialog
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
@@ -12,34 +14,34 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.android.volley.AuthFailureError
-import com.android.volley.Response
-import com.android.volley.VolleyLog
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import dagger.hilt.android.AndroidEntryPoint
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.base.BaseActivity
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
+import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.network.NetworkHelper
 import com.softxilla.notification_forwarder.utils.LoadingUtils
 import com.softxilla.notification_forwarder.utils.syncOfflineMessageToDatabase
 import com.softxilla.notification_forwarder.utils.visible
-import org.json.JSONArray
-import org.json.JSONObject
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
+    @Inject
+    lateinit var prefManager: SharedPreferenceManager
     private lateinit var rlToolbar: Toolbar
     private lateinit var tvTitle: TextView
     private lateinit var ivBackButton: ImageView
     private lateinit var messageDatabaseHelper: MessageDatabaseHelper
+    private lateinit var userInfoDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +67,24 @@ class MainActivity : BaseActivity() {
         // if last page home screen will be launched
         if (!isNotificationServiceEnabled()) {
             startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        }
+        // store user id in shared preference
+        userInfoDialog = Dialog(this, R.style.ThemeOverlay_MaterialComponents_Dialog_Alert)
+        userInfoDialog.setContentView(R.layout.dialog_user_info_layout)
+        if (userInfoDialog.window != null) {
+            userInfoDialog.window!!.setBackgroundDrawable(ColorDrawable(0))
+        }
+        userInfoDialog.setCancelable(false)
+        if (prefManager.getUserPhone().isEmpty()) {
+            userInfoDialog.show()
+            val userName = userInfoDialog.findViewById<EditText>(R.id.userNameInputField)
+            val userPhone = userInfoDialog.findViewById<EditText>(R.id.userPhoneInputField)
+            val saveUserInfo = userInfoDialog.findViewById<AppCompatButton>(R.id.saveUserInfo)
+            saveUserInfo.setOnClickListener {
+                prefManager.setNotifierUserInfo(userName.text.toString(), userPhone.text.toString())
+                userInfoDialog.dismiss()
+                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -128,7 +148,7 @@ class MainActivity : BaseActivity() {
     private fun syncOfflineMessage() {
         val helper = NetworkHelper(applicationContext)
         if (helper.isNetworkConnected()) {
-            syncOfflineMessageToDatabase(applicationContext)
+            syncOfflineMessageToDatabase(applicationContext, prefManager.getUserPhone())
         } else {
             Toast.makeText(this, "No Internet Connection...", Toast.LENGTH_SHORT).show()
             Log.d("status", "Offline, No Internet")

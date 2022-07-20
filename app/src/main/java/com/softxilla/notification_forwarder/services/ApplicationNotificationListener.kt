@@ -14,10 +14,13 @@ import com.android.volley.VolleyLog
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
+import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.network.NetworkHelper
 import com.softxilla.notification_forwarder.utils.syncOfflineMessageToDatabase
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ApplicationNotificationListener : NotificationListenerService() {
 
     companion object {
@@ -27,6 +30,9 @@ class ApplicationNotificationListener : NotificationListenerService() {
         const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 10
 
     }
+
+    @Inject
+    lateinit var prefManager: SharedPreferenceManager
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
 
@@ -60,14 +66,14 @@ class ApplicationNotificationListener : NotificationListenerService() {
             postObject["android_sub_text"] = androidSubText
             postObject["android_big_text"] = androidBigText
             postObject["android_info_text"] = androidInfoText
-            postObject["msg_from"] = "01716724245"
+            postObject["msg_from"] = prefManager.getUserPhone()
 
             val helper = NetworkHelper(applicationContext)
             val databaseHelper = MessageDatabaseHelper(applicationContext)
             if (helper.isNetworkConnected()) {
                 sendNotificationPost(postObject)
-                Log.d("status", "Online, Internet Available")
-                syncOfflineMessageToDatabase(applicationContext)
+                Log.d("postObject", postObject.toString())
+                syncOfflineMessageToDatabase(applicationContext, prefManager.getUserPhone())
             } else {
                 databaseHelper.storeMessagesSQLite(appName, packageName, androidTitle, androidText)
                 Log.d("status", "Offline, No Internet")

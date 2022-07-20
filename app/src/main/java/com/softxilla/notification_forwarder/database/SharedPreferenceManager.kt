@@ -12,7 +12,6 @@ open class SharedPreferenceManager @Inject constructor(
 ) {
 
     companion object {
-        const val areaInfo = "area_info" //store login information
         const val ACCESS_TOKEN = "token" //store token information
         const val IS_LOGIN = "is_login" //store token information
         const val IS_REMEMBER = "is_remember"
@@ -27,7 +26,6 @@ open class SharedPreferenceManager @Inject constructor(
         const val FULL_NAME = "name"
         const val EMAIL = "email"
         const val PHONE = "phone"
-        const val PHOTO = "photo"
         const val ROLE_ID = "roleId"
         const val ROLE_NAME = "roleName"
         const val VISIBLE_NAME = "visibleName"
@@ -108,10 +106,12 @@ open class SharedPreferenceManager @Inject constructor(
         preferences[SUB_NAME] = user.sbuName
     }
 
+    fun setNotifierUserInfo(userName: String, phoneNumber: String) {
+        preferences[USER_NAME] = userName
+        preferences[PHONE] = phoneNumber
+    }
+
     fun setTokenInformation(tokenDataModel: TokenDataModel) {
-//        editor.putString("accessToken", tokenDataModel.accessToken)
-//        editor.putString("tokenType", tokenDataModel.tokenType)
-//        editor.putString("expireDate", tokenDataModel.expireAt)
         preferences[ACCESS_TOKEN] = tokenDataModel.accessToken
     }
 
@@ -121,6 +121,10 @@ open class SharedPreferenceManager @Inject constructor(
      */
     fun getUserName(): String {
         return preferences[USER_NAME] ?: ""
+    }
+
+    fun getUserPhone(): String {
+        return preferences[PHONE] ?: ""
     }
 
     /**

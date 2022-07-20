@@ -16,59 +16,8 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 
 
-/**
- * ...add comma for amount
- * @param number decimal amount
- * @return amount with comma
- */
-fun numberFormat(number: Double): String {
-    val formatter = DecimalFormat(amountFormat(doubleValueFormat(number)))
-    return formatter.format(number)
-}
-
-/**
- * ...get amount format
- * @param amount actual amount
- * @return amount format
- */
-fun amountFormat(amount: String): String {
-    return when (amount.length) {
-        5 -> "##,###.##"
-        6 -> "#,##,###.##"
-        7 -> "##,##,###.##"
-        8 -> "#,##,##,###.##"
-        9 -> "##,##,##,###.##"
-        10 -> "#,##,##,##,###.##"
-        11 -> "##,##,##,##,###.##"
-        4 -> "#,###.##"
-        else -> "#,###.##"
-    }
-}
-
-/**
- * get double format value with two decimal places
- * when decimal number is 0 then return int format
- * @param d double value
- * @return double format value
- */
-fun doubleValueFormat(d: Double): String {
-    return if (d.equals(d.toLong())) {
-        String.format("%d", d.toLong())
-    } else {
-        String.format("%.2f", d)
-    }
-}
-
-fun countJsonObject(json: String): Int {
-    return try {
-        val jsonArray = JSONArray(json)
-        jsonArray.length()
-    } catch (ex: Exception) {
-        0
-    }
-}
-
-fun syncOfflineMessageToDatabase(mContext: Context) {
+fun syncOfflineMessageToDatabase(mContext: Context, msgFrom: String): Boolean {
+    var isSyncToDatabase = false
     val messageDatabaseHelper = MessageDatabaseHelper(mContext)
     val messages = messageDatabaseHelper.getUnSyncedMessage()
     val jsonArray = JSONArray()
@@ -92,7 +41,7 @@ fun syncOfflineMessageToDatabase(mContext: Context) {
 
         val postObject: MutableMap<String, String> = HashMap()
         postObject["messages"] = jsonArray.toString()
-        postObject["msg_from"] = "01716724245"
+        postObject["msg_from"] = msgFrom
         Log.d("offlineMessage", postObject.toString())
         val url = "https://softxilla.com/api/sync-offline-message"
         val requestQueue = Volley.newRequestQueue(mContext)
@@ -100,8 +49,9 @@ fun syncOfflineMessageToDatabase(mContext: Context) {
         val jsonObjRequest: StringRequest =
             object : StringRequest(Method.POST, url,
                 Response.Listener {
-                    Log.d("sync_offline", it.toString())
-                    updateDatabaseStatus(mContext, it.toString())
+                    val offline = Gson().fromJson(it.toString(), OfflineResponse::class.java)
+                    updateDatabaseStatus(mContext, offline)
+                    isSyncToDatabase = true
                 }, Response.ErrorListener { error ->
                     VolleyLog.d("volley", "Error: " + error.message)
                     error.printStackTrace()
@@ -117,13 +67,15 @@ fun syncOfflineMessageToDatabase(mContext: Context) {
             }
         requestQueue.add(jsonObjRequest)
     } else {
+        isSyncToDatabase = false
         Toast.makeText(mContext, "No Message to Sync", Toast.LENGTH_SHORT).show()
     }
+    return isSyncToDatabase
 }
 
-fun updateDatabaseStatus(mContext: Context, response: String) {
+fun updateDatabaseStatus(mContext: Context, offlineResponse: OfflineResponse) {
+    Log.d("offlineResponse", offlineResponse.toString())
     val databaseHelper = MessageDatabaseHelper(mContext)
-    val offlineResponse = Gson().fromJson(response, OfflineResponse::class.java)
     if (offlineResponse.status) {
         println("offlineResponse object: $offlineResponse")
         offlineResponse.offlineIds.forEach {
@@ -131,6 +83,7 @@ fun updateDatabaseStatus(mContext: Context, response: String) {
             databaseHelper.updateMessageStatus(it.toInt())
         }
     } else {
+        Toast.makeText(mContext, "Nothing to sync", Toast.LENGTH_SHORT).show()
         println("offlineResponse object: $offlineResponse")
     }
 }
