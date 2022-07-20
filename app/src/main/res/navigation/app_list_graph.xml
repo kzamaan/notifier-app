@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_list_graph"
-    app:startDestination="@id/applicationListFragment">
+    app:startDestination="@id/userHistoryFragment">
+
+    <fragment
+        android:id="@+id/userHistoryFragment"
+        android:name="com.softxilla.notification_forwarder.ui.fragments.UserHistoryFragment"
+        android:label="UserHistoryFragment"
+        tools:layout="@layout/fragment_user_history" />
 
     <fragment
         android:id="@+id/applicationListFragment"

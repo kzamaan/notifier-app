@@ -116,15 +116,6 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.syncMessage -> {
-                syncOfflineMessage()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun isNotificationServiceEnabled(): Boolean {
         val pkgName = packageName
         val flat = Settings.Secure.getString(
@@ -143,15 +134,5 @@ class MainActivity : BaseActivity() {
             }
         }
         return false
-    }
-
-    private fun syncOfflineMessage() {
-        val helper = NetworkHelper(applicationContext)
-        if (helper.isNetworkConnected()) {
-            syncOfflineMessageToDatabase(applicationContext, prefManager.getUserPhone())
-        } else {
-            Toast.makeText(this, "No Internet Connection...", Toast.LENGTH_SHORT).show()
-            Log.d("status", "Offline, No Internet")
-        }
     }
 }
