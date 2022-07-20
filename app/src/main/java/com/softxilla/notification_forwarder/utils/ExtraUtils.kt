@@ -17,11 +17,12 @@ import java.text.DecimalFormat
 
 
 fun syncOfflineMessageToDatabase(mContext: Context, msgFrom: String): Boolean {
-    var isSyncToDatabase = false
+    val loadingUtils = LoadingUtils(mContext)
     val messageDatabaseHelper = MessageDatabaseHelper(mContext)
     val messages = messageDatabaseHelper.getUnSyncedMessage()
     val jsonArray = JSONArray()
     if (messages.moveToFirst()) {
+        loadingUtils.isLoading(true)
         do {
             val messageObject = JSONObject()
             val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
@@ -49,10 +50,11 @@ fun syncOfflineMessageToDatabase(mContext: Context, msgFrom: String): Boolean {
         val jsonObjRequest: StringRequest =
             object : StringRequest(Method.POST, url,
                 Response.Listener {
+                    loadingUtils.isLoading(false)
                     val offline = Gson().fromJson(it.toString(), OfflineResponse::class.java)
                     updateDatabaseStatus(mContext, offline)
-                    isSyncToDatabase = true
                 }, Response.ErrorListener { error ->
+                    loadingUtils.isLoading(false)
                     VolleyLog.d("volley", "Error: " + error.message)
                     error.printStackTrace()
                 }) {
@@ -67,16 +69,16 @@ fun syncOfflineMessageToDatabase(mContext: Context, msgFrom: String): Boolean {
             }
         requestQueue.add(jsonObjRequest)
     } else {
-        isSyncToDatabase = false
         Toast.makeText(mContext, "No Message to Sync", Toast.LENGTH_SHORT).show()
     }
-    return isSyncToDatabase
+    return true
 }
 
 fun updateDatabaseStatus(mContext: Context, offlineResponse: OfflineResponse) {
     Log.d("offlineResponse", offlineResponse.toString())
     val databaseHelper = MessageDatabaseHelper(mContext)
     if (offlineResponse.status) {
+        Toast.makeText(mContext, offlineResponse.message, Toast.LENGTH_SHORT).show()
         println("offlineResponse object: $offlineResponse")
         offlineResponse.offlineIds.forEach {
             Log.d("offlineId", it)
