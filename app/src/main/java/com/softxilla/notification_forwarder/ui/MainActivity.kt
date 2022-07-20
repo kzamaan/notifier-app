@@ -10,9 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -26,9 +24,7 @@ import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.base.BaseActivity
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
-import com.softxilla.notification_forwarder.network.NetworkHelper
 import com.softxilla.notification_forwarder.utils.LoadingUtils
-import com.softxilla.notification_forwarder.utils.syncOfflineMessageToDatabase
 import com.softxilla.notification_forwarder.utils.visible
 import javax.inject.Inject
 
@@ -84,6 +80,9 @@ class MainActivity : BaseActivity() {
                 prefManager.setNotifierUserInfo(userName.text.toString(), userPhone.text.toString())
                 userInfoDialog.dismiss()
                 Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+                finish()
+                overridePendingTransition(R.anim.animation_fade_in, 0)
+                startActivity(intent)
             }
         }
     }
