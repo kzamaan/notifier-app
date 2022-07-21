@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.base.BaseFragment
+import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.databinding.FragmentUserHistoryBinding
 import com.softxilla.notification_forwarder.network.NetworkHelper
@@ -25,6 +26,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
     lateinit var prefManager: SharedPreferenceManager
     private lateinit var binding: FragmentUserHistoryBinding
     private lateinit var userInfoDialog: Dialog
+    private lateinit var databaseHelper: MessageDatabaseHelper
 
     override val layoutId: Int = R.layout.fragment_user_history
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
         mContext = requireContext()
         mActivity = requireActivity()
         loadingUtils = LoadingUtils(mContext)
+        databaseHelper = MessageDatabaseHelper(mContext)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,7 +75,8 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
 
             }
         } else {
-            binding.tvUserName.text = prefManager.getUserName()
+            val countMessage = databaseHelper.getUnSyncedMessage().count
+            binding.tvUserName.text = "${prefManager.getUserName()} ($countMessage)"
             binding.tvPhoneNumber.text = prefManager.getUserPhone()
             binding.ivUserImage.loadImage("https://ui-avatars.com/api/?name=${prefManager.getUserName()}")
         }
@@ -90,6 +94,8 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
                 Toast.makeText(mContext, "No Internet Connection...", Toast.LENGTH_SHORT).show()
                 Log.d("status", "Offline, No Internet")
             }
+            val countMessage = databaseHelper.getUnSyncedMessage().count
+            binding.tvUserName.text = "${prefManager.getUserName()} ($countMessage)"
         }
     }
 }

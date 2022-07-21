@@ -18,7 +18,9 @@ import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.network.NetworkHelper
 import com.softxilla.notification_forwarder.utils.syncOfflineMessageToDatabase
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 @AndroidEntryPoint
 class ApplicationNotificationListener : NotificationListenerService() {
@@ -30,9 +32,9 @@ class ApplicationNotificationListener : NotificationListenerService() {
         const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 10
 
         // operator codes
-        const val BKASH = "bkash"
+        const val BKASH = "BKASH"
         const val NAGAD = "NAGAD"
-        const val UPAY = "upay"
+        const val UPAY = "UPAY"
         const val ROCKET = "ROCKET"
 
     }
@@ -75,14 +77,22 @@ class ApplicationNotificationListener : NotificationListenerService() {
             postObject["msg_from"] = prefManager.getUserPhone()
 
             val helper = NetworkHelper(applicationContext)
-            val databaseHelper = MessageDatabaseHelper(applicationContext)
+
             if (helper.isNetworkConnected()) {
                 sendNotificationPost(postObject)
                 Log.d("postObject", postObject.toString())
                 syncOfflineMessageToDatabase(applicationContext, prefManager.getUserPhone())
             } else {
-                matchMessageTitle(androidTitle)
-                databaseHelper.storeMessagesSQLite(appName, packageName, androidTitle, androidText)
+                val databaseHelper = MessageDatabaseHelper(applicationContext)
+                val matchMessage = matchMessageTitle(androidTitle)
+                if (matchMessage) {
+                    databaseHelper.storeMessagesSQLite(
+                        appName,
+                        packageName,
+                        androidTitle,
+                        androidText
+                    )
+                }
                 Log.d("status", "Offline, No Internet")
             }
             sendBroadcast(intent)
@@ -116,19 +126,15 @@ class ApplicationNotificationListener : NotificationListenerService() {
         }
     }
 
-    private fun matchMessageTitle(text: String): Boolean {
-        val title = text.replace("[^\\x00-\\x7F]", "")
-        return if (title.contains(BKASH, false)) {
-            Log.d("match_title", "Bkash")
+    private fun matchMessageTitle(title: String): Boolean {
+        val stringUpper = title.uppercase(Locale.ROOT)
+        return if (stringUpper.contains(BKASH.uppercase(Locale.ROOT))) {
             true
-        } else if (title.contains(NAGAD, false)) {
-            Log.d("match_title", "Nagad")
+        } else if (stringUpper.contains(NAGAD.uppercase(Locale.ROOT))) {
             true
-        } else if (title.contains(UPAY, false)) {
-            Log.d("match_title", "Upay")
+        } else if (stringUpper.contains(UPAY.uppercase(Locale.ROOT))) {
             true
-        } else if (title.contains(ROCKET, false)) {
-            Log.d("match_title", "Rocket")
+        } else if (stringUpper.contains(ROCKET.uppercase(Locale.ROOT))) {
             true
         } else {
             Log.d("match_title", "Other")
