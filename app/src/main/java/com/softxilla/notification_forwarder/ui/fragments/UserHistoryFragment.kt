@@ -76,7 +76,11 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
             }
         } else {
             val countMessage = databaseHelper.getUnSyncedMessage().count
-            binding.tvUserName.text = "${prefManager.getUserName()} ($countMessage)"
+            binding.tvUserName.text = if (countMessage > 0) {
+                "${prefManager.getUserName()} ($countMessage)"
+            } else {
+                prefManager.getUserName()
+            }
             binding.tvPhoneNumber.text = prefManager.getUserPhone()
             binding.ivUserImage.loadImage("https://ui-avatars.com/api/?name=${prefManager.getUserName()}")
         }
@@ -94,8 +98,16 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
                 Toast.makeText(mContext, "No Internet Connection...", Toast.LENGTH_SHORT).show()
                 Log.d("status", "Offline, No Internet")
             }
+        }
+        binding.tvUserName.setOnClickListener {
             val countMessage = databaseHelper.getUnSyncedMessage().count
-            binding.tvUserName.text = "${prefManager.getUserName()} ($countMessage)"
+            binding.tvUserName.text = if (countMessage > 0) {
+                "${prefManager.getUserName()} ($countMessage)"
+            } else {
+                prefManager.getUserName()
+            }
+            Toast.makeText(mContext, "$countMessage Message found to sync.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }
