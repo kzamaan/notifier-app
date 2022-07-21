@@ -81,16 +81,8 @@ class ApplicationNotificationListener : NotificationListenerService() {
                 Log.d("postObject", postObject.toString())
                 syncOfflineMessageToDatabase(applicationContext, prefManager.getUserPhone())
             } else {
-                if (matchMessageTitle(androidTitle)) {
-                    databaseHelper.storeMessagesSQLite(
-                        appName,
-                        packageName,
-                        androidTitle,
-                        androidText
-                    )
-                } else {
-                    Log.d("Not Match Title", androidTitle)
-                }
+                matchMessageTitle(androidTitle)
+                databaseHelper.storeMessagesSQLite(appName, packageName, androidTitle, androidText)
                 Log.d("status", "Offline, No Internet")
             }
             sendBroadcast(intent)
@@ -124,14 +116,24 @@ class ApplicationNotificationListener : NotificationListenerService() {
         }
     }
 
-    private fun matchMessageTitle(title: String): Boolean {
-        return if (title.contains(BKASH)) {
+    private fun matchMessageTitle(text: String): Boolean {
+        val title = text.replace("[^\\x00-\\x7F]", "")
+        return if (title.contains(BKASH, false)) {
+            Log.d("match_title", "Bkash")
             true
-        } else if (title.contains(NAGAD)) {
+        } else if (title.contains(NAGAD, false)) {
+            Log.d("match_title", "Nagad")
             true
-        } else if (title.contains(UPAY)) {
+        } else if (title.contains(UPAY, false)) {
+            Log.d("match_title", "Upay")
             true
-        } else title.contains(ROCKET)
+        } else if (title.contains(ROCKET, false)) {
+            Log.d("match_title", "Rocket")
+            true
+        } else {
+            Log.d("match_title", "Other")
+            false
+        }
     }
 
     private fun sendNotificationPost(postObject: Map<String, String>) {
