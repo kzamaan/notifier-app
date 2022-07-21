@@ -1,31 +1,24 @@
 package com.softxilla.notification_forwarder.ui
 
-import android.app.Dialog
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
 import android.view.Menu
 import android.view.View
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import dagger.hilt.android.AndroidEntryPoint
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.base.BaseActivity
-import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
-import com.softxilla.notification_forwarder.utils.LoadingUtils
 import com.softxilla.notification_forwarder.utils.visible
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
@@ -36,14 +29,11 @@ class MainActivity : BaseActivity() {
     private lateinit var rlToolbar: Toolbar
     private lateinit var tvTitle: TextView
     private lateinit var ivBackButton: ImageView
-    private lateinit var messageDatabaseHelper: MessageDatabaseHelper
-    private lateinit var userInfoDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        messageDatabaseHelper = MessageDatabaseHelper(this)
-        loadingUtils = LoadingUtils(this)
+
         rlToolbar = findViewById(R.id.toolbar_root)
         tvTitle = findViewById(R.id.tv_toolbar_title)
         ivBackButton = findViewById(R.id.iv_back_button)
@@ -63,27 +53,6 @@ class MainActivity : BaseActivity() {
         // if last page home screen will be launched
         if (!isNotificationServiceEnabled()) {
             startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
-        }
-        // store user id in shared preference
-        userInfoDialog = Dialog(this, R.style.ThemeOverlay_MaterialComponents_Dialog_Alert)
-        userInfoDialog.setContentView(R.layout.dialog_user_info_layout)
-        if (userInfoDialog.window != null) {
-            userInfoDialog.window!!.setBackgroundDrawable(ColorDrawable(0))
-        }
-        userInfoDialog.setCancelable(false)
-        if (prefManager.getUserPhone().isEmpty()) {
-            userInfoDialog.show()
-            val userName = userInfoDialog.findViewById<EditText>(R.id.userNameInputField)
-            val userPhone = userInfoDialog.findViewById<EditText>(R.id.userPhoneInputField)
-            val saveUserInfo = userInfoDialog.findViewById<AppCompatButton>(R.id.saveUserInfo)
-            saveUserInfo.setOnClickListener {
-                prefManager.setNotifierUserInfo(userName.text.toString(), userPhone.text.toString())
-                userInfoDialog.dismiss()
-                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
-                finish()
-                overridePendingTransition(R.anim.animation_fade_in, 0)
-                startActivity(intent)
-            }
         }
     }
 

@@ -13,10 +13,13 @@ import com.softxilla.notification_forwarder.data.model.OfflineResponse
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.DecimalFormat
 
 
-fun syncOfflineMessageToDatabase(mContext: Context, msgFrom: String): Boolean {
+fun syncOfflineMessageToDatabase(
+    mContext: Context,
+    msgFrom: String,
+    isActivity: Boolean = false
+): Boolean {
     val loadingUtils = LoadingUtils(mContext)
     val messageDatabaseHelper = MessageDatabaseHelper(mContext)
     val messages = messageDatabaseHelper.getUnSyncedMessage()
@@ -69,7 +72,9 @@ fun syncOfflineMessageToDatabase(mContext: Context, msgFrom: String): Boolean {
             }
         requestQueue.add(jsonObjRequest)
     } else {
-        Toast.makeText(mContext, "No Message to Sync", Toast.LENGTH_SHORT).show()
+        if (isActivity) {
+            Toast.makeText(mContext, "No Message to Sync", Toast.LENGTH_SHORT).show()
+        }
     }
     return true
 }
