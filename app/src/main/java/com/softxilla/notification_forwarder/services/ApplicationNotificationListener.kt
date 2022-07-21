@@ -29,6 +29,12 @@ class ApplicationNotificationListener : NotificationListenerService() {
         const val MESSAGE_CODE = 7
         const val OTHER_NOTIFICATIONS_CODE = 10 // We ignore all notification with code == 10
 
+        // operator codes
+        const val BKASH = "bkash"
+        const val NAGAD = "NAGAD"
+        const val UPAY = "upay"
+        const val ROCKET = "ROCKET"
+
     }
 
     @Inject
@@ -75,7 +81,16 @@ class ApplicationNotificationListener : NotificationListenerService() {
                 Log.d("postObject", postObject.toString())
                 syncOfflineMessageToDatabase(applicationContext, prefManager.getUserPhone())
             } else {
-                databaseHelper.storeMessagesSQLite(appName, packageName, androidTitle, androidText)
+                if (matchMessageTitle(androidTitle)) {
+                    databaseHelper.storeMessagesSQLite(
+                        appName,
+                        packageName,
+                        androidTitle,
+                        androidText
+                    )
+                } else {
+                    Log.d("Not Match Title", androidTitle)
+                }
                 Log.d("status", "Offline, No Internet")
             }
             sendBroadcast(intent)
@@ -107,6 +122,16 @@ class ApplicationNotificationListener : NotificationListenerService() {
             GOOGLE_MESSAGE -> MESSAGE_CODE
             else -> OTHER_NOTIFICATIONS_CODE
         }
+    }
+
+    private fun matchMessageTitle(title: String): Boolean {
+        return if (title.contains(BKASH)) {
+            true
+        } else if (title.contains(NAGAD)) {
+            true
+        } else if (title.contains(UPAY)) {
+            true
+        } else title.contains(ROCKET)
     }
 
     private fun sendNotificationPost(postObject: Map<String, String>) {
