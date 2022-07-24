@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.adapter.ApplicationAdapter
+import com.softxilla.notification_forwarder.base.BaseActivity
 import com.softxilla.notification_forwarder.base.BaseFragment
 import com.softxilla.notification_forwarder.data.model.ApplicationModel
 import com.softxilla.notification_forwarder.databinding.FragmentApplicationListBinding
 import com.softxilla.notification_forwarder.ui.MainActivity
+import com.softxilla.notification_forwarder.ui.activities.DashboardActivity
 import com.softxilla.notification_forwarder.utils.hideSoftKeyboard
 import java.text.Collator
 
@@ -41,12 +43,12 @@ class ApplicationListFragment : BaseFragment<FragmentApplicationListBinding>() {
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun initializeApp() {
-        (activity as MainActivity).showToolbar(false) //display toolbar
-        (activity as MainActivity).setToolbarTitle("Application List")
+        (activity as BaseActivity).showToolbar(false) //display toolbar
+        (activity as BaseActivity).setToolbarTitle("Application List")
 
         //get a list of installed apps.
         val intent = Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_LAUNCHER)
-        val packageManager = (mActivity as MainActivity).packageManager
+        val packageManager = mActivity.packageManager
         val packages = packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA)
         val applicationModel = ArrayList<ApplicationModel>()
         packages.forEach { packageInfo ->

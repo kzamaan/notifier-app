@@ -15,19 +15,6 @@
         android:id="@+id/applicationListFragment"
         android:name="com.softxilla.notification_forwarder.ui.fragments.ApplicationListFragment"
         android:label="ApplicationListFragment"
-        tools:layout="@layout/fragment_application_list">
-        <action
-            android:id="@+id/action_applicationListFragment_to_applicationDetailFragment"
-            app:destination="@id/applicationDetailFragment"
-            app:enterAnim="@anim/animation_slide_in_right"
-            app:exitAnim="@anim/animation_slide_out_left"
-            app:popEnterAnim="@anim/animation_slide_in_left"
-            app:popExitAnim="@anim/animation_slide_out_right" />
-    </fragment>
+        tools:layout="@layout/fragment_application_list" />
 
-    <fragment
-        android:id="@+id/applicationDetailFragment"
-        android:name="com.softxilla.notification_forwarder.ui.fragments.ApplicationDetailFragment"
-        android:label="ApplicationDetailFragment"
-        tools:layout="@layout/fragment_application_detail" />
 </navigation>

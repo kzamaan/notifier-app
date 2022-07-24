@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,6 +21,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.base.BaseActivity
+import com.softxilla.notification_forwarder.ui.activities.DashboardActivity
+import com.softxilla.notification_forwarder.utils.goToNextActivityAnimation
 import com.softxilla.notification_forwarder.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -93,5 +96,15 @@ class MainActivity : BaseActivity() {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.bottom_nav_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.applicationList -> {
+                goToNextActivityAnimation(this, Intent(this, DashboardActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
