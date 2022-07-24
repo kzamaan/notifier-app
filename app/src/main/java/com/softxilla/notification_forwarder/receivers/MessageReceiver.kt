@@ -16,7 +16,6 @@ import com.softxilla.notification_forwarder.data.response.OnlineResponse
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.network.NetworkHelper
-import com.softxilla.notification_forwarder.utils.syncOfflineMessageToDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
@@ -58,7 +57,6 @@ class MessageReceiver : BroadcastReceiver() {
                     postObject["app_id"] = lastMessage.toString()
                     if (helper.isNetworkConnected()) {
                         sendNotificationPost(postObject, mContext)
-                        syncOfflineMessageToDatabase(mContext, prefManager.getUserPhone())
                     }
                     Log.d("Match Title", "Match Title: $originatingAddress")
                 } else {
