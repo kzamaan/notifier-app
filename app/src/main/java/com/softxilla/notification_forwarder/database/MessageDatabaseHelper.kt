@@ -12,21 +12,21 @@ const val TABLE_NAME = "text_messages"
 
 class MessageDatabaseHelper(
     context: Context
-) : SQLiteOpenHelper(context, DATABASE_NAME, null, 5) {
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
     companion object {
         const val ID = "id"
-        const val APP_NAME = "app_name"
-        const val PACKAGE_NAME = "package_name"
         const val ANDROID_TITLE = "android_title"
         const val ANDROID_TEXT = "android_text"
         const val CREATED_AT = "created_at"
         const val STATUS = "status"
     }
+
     override fun onCreate(db: SQLiteDatabase) {
         val sql =
-            ("CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $APP_NAME TEXT, $PACKAGE_NAME TEXT, $ANDROID_TITLE TEXT, $ANDROID_TEXT TEXT, $CREATED_AT TEXT, $STATUS INTEGER default 0)")
+            ("CREATE TABLE $TABLE_NAME ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $ANDROID_TITLE TEXT, $ANDROID_TEXT TEXT, $CREATED_AT TEXT, $STATUS INTEGER default 0)")
         db.execSQL(sql)
     }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         val sql = "DROP TABLE IF EXISTS $TABLE_NAME"
         db.execSQL(sql)
@@ -35,28 +35,28 @@ class MessageDatabaseHelper(
 
     /**
      * Inserts a new message into the database.
-     * @param appName The name of the app that sent the message.
-     * @param packageName The package name of the app that sent the message.
      * @param androidTitle The title of the message.
      * @param androidText The text of the message.
-     * @return boolean.
+     * @return last added row id.
      */
-    fun storeMessagesSQLite(
-        appName: String,
-        packageName: String,
+    fun saveMsgSQLite(
         androidTitle: String,
         androidText: String
-    ): Boolean {
+    ): Int {
+        var rowId = 0
         val db = writableDatabase
         val values = ContentValues()
-        values.put(APP_NAME, appName)
-        values.put(PACKAGE_NAME, packageName)
         values.put(ANDROID_TITLE, androidTitle)
         values.put(ANDROID_TEXT, androidText)
         values.put(CREATED_AT, LocalDateTime.now().toString())
         db.insert(TABLE_NAME, null, values)
-        db.close()
-        return true
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $ID DESC LIMIT 1", null)
+        if (cursor.moveToLast()) {
+            rowId = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return rowId;
     }
 
     /**

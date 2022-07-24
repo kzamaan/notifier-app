@@ -9,7 +9,7 @@ import com.android.volley.VolleyLog
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
-import com.softxilla.notification_forwarder.data.model.OfflineResponse
+import com.softxilla.notification_forwarder.data.response.OfflineResponse
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import org.json.JSONArray
 import org.json.JSONObject
@@ -29,16 +29,12 @@ fun syncOfflineMessageToDatabase(
         do {
             val messageObject = JSONObject()
             val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
-            val locAppName = messages.getColumnIndex(MessageDatabaseHelper.APP_NAME)
-            val locPackage = messages.getColumnIndex(MessageDatabaseHelper.PACKAGE_NAME)
-            val locTitle = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TITLE)
-            val locText = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TEXT)
+            val androidTitle = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TITLE)
+            val androidText = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TEXT)
             val createdAt = messages.getColumnIndex(MessageDatabaseHelper.CREATED_AT)
             messageObject.put("offline_id", messages.getString(rowId))
-            messageObject.put("app_name", messages.getString(locAppName))
-            messageObject.put("package_name", messages.getString(locPackage))
-            messageObject.put("android_title", messages.getString(locTitle))
-            messageObject.put("android_text", messages.getString(locText))
+            messageObject.put("android_title", messages.getString(androidTitle))
+            messageObject.put("android_text", messages.getString(androidText))
             messageObject.put("created_at", messages.getString(createdAt))
             jsonArray.put(messageObject)
         } while (messages.moveToNext())
@@ -90,7 +86,7 @@ fun updateDatabaseStatus(mContext: Context, offlineResponse: OfflineResponse) {
             databaseHelper.updateMessageStatus(it.toInt())
         }
     } else {
-        Toast.makeText(mContext, "Nothing to sync", Toast.LENGTH_SHORT).show()
+        Toast.makeText(mContext, offlineResponse.message, Toast.LENGTH_SHORT).show()
         println("offlineResponse object: $offlineResponse")
     }
 }
