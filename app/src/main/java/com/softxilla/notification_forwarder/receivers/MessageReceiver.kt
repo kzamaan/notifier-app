@@ -22,7 +22,7 @@ class MessageReceiver : BroadcastReceiver() {
         const val BKASH = "BKASH"
         const val NAGAD = "NAGAD"
         const val UPAY = "UPAY"
-        const val ROCKET = "ROCKET"
+        const val ROCKET = "16216"
     }
 
     @Inject
