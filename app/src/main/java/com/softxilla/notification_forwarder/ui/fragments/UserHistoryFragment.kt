@@ -143,6 +143,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
         val messages = databaseHelper.getUnSyncedMessage()
         val localMessageList = ArrayList<LocalMessage>()
         if (messages.moveToFirst()) {
+            binding.tvHistory.text = "Pending Message"
             do {
                 val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
                 val androidTitle = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TITLE)
@@ -160,6 +161,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
             } while (messages.moveToNext())
             messageAdapter.setMessages(localMessageList)
         } else {
+            messageAdapter.setMessages(arrayListOf())
             binding.tvHistory.text = "No Pending Message"
         }
     }
@@ -232,9 +234,8 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
 
     private fun updateDatabaseStatus(mContext: Context, offlineResponse: OfflineResponse) {
         Log.d("offlineResponse", offlineResponse.toString())
+        Toast.makeText(mContext, offlineResponse.message, Toast.LENGTH_SHORT).show()
         if (offlineResponse.status) {
-            Toast.makeText(mContext, offlineResponse.message, Toast.LENGTH_SHORT).show()
-            println("offlineResponse object: $offlineResponse")
             offlineResponse.offlineIds.forEach {
                 Log.d("offlineId", it)
                 databaseHelper.updateMessageStatus(it.toInt())
@@ -242,8 +243,13 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
                 loadLocalMessage()
             }
         } else {
-            Toast.makeText(mContext, offlineResponse.message, Toast.LENGTH_SHORT).show()
-            println("offlineResponse object: $offlineResponse")
+            if (offlineResponse.offlineIds.isNotEmpty()) {
+                offlineResponse.offlineIds.forEach {
+                    databaseHelper.updateMessageStatus(it.toInt())
+                    refreshUserUnSyncMessage()
+                    loadLocalMessage()
+                }
+            }
         }
     }
 }
