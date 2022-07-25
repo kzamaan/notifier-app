@@ -3,13 +3,15 @@ package com.softxilla.notification_forwarder.ui.fragments
 import android.app.Dialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.softxilla.notification_forwarder.R
+import com.softxilla.notification_forwarder.adapter.MessageAdapter
 import com.softxilla.notification_forwarder.base.BaseFragment
+import com.softxilla.notification_forwarder.data.model.LocalMessage
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.databinding.FragmentUserHistoryBinding
@@ -27,6 +29,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
     private lateinit var binding: FragmentUserHistoryBinding
     private lateinit var userInfoDialog: Dialog
     private lateinit var databaseHelper: MessageDatabaseHelper
+    private lateinit var messageAdapter: MessageAdapter
 
     override val layoutId: Int = R.layout.fragment_user_history
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +51,11 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
         // store user id in shared preference
         userInfoDialog = Dialog(mContext, R.style.ThemeOverlay_MaterialComponents_Dialog_Alert)
         userInfoDialog.setContentView(R.layout.dialog_user_info_layout)
+
         if (userInfoDialog.window != null) {
             userInfoDialog.window!!.setBackgroundDrawable(ColorDrawable(0))
         }
+
         userInfoDialog.setCancelable(false)
         if (prefManager.getUserPhone().isEmpty()) {
             binding.userInfoCard.visibility = View.GONE
@@ -96,18 +101,64 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
                 syncOfflineMessageToDatabase(mContext, prefManager.getUserPhone(), true)
             } else {
                 Toast.makeText(mContext, "No Internet Connection...", Toast.LENGTH_SHORT).show()
-                Log.d("status", "Offline, No Internet")
             }
         }
+
         binding.tvUserName.setOnClickListener {
-            val countMessage = databaseHelper.getUnSyncedMessage().count
-            binding.tvUserName.text = if (countMessage > 0) {
-                "${prefManager.getUserName()} ($countMessage)"
-            } else {
-                prefManager.getUserName()
-            }
-            Toast.makeText(mContext, "$countMessage Message found to sync.", Toast.LENGTH_SHORT)
-                .show()
+            refreshUserUnSyncMessage()
         }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshUserUnSyncMessage()
+            loadLocalMessage()
+            // stop refreshing after 1 second
+            Thread {
+                try {
+                    Thread.sleep(1000)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+                binding.swipeRefreshLayout.isRefreshing = false
+            }.start()
+        }
+        messageAdapter = MessageAdapter(arrayListOf(), mContext)
+        binding.rvMessageHistory.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = messageAdapter
+        }
+        loadLocalMessage()
+    }
+
+    private fun loadLocalMessage() {
+        val messages = databaseHelper.getAllMessages()
+        val localMessageList = ArrayList<LocalMessage>()
+        if (messages.moveToFirst()) {
+            do {
+                val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
+                val androidTitle = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TITLE)
+                val androidText = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TEXT)
+                val createdAt = messages.getColumnIndex(MessageDatabaseHelper.CREATED_AT)
+                val status = messages.getColumnIndex(MessageDatabaseHelper.STATUS)
+                val item = LocalMessage(
+                    messages.getString(rowId),
+                    messages.getString(androidTitle),
+                    messages.getString(androidText),
+                    messages.getString(createdAt),
+                    messages.getString(status).toInt()
+                )
+                localMessageList.add(item)
+            } while (messages.moveToNext())
+            messageAdapter.setMessages(localMessageList)
+        }
+    }
+
+    private fun refreshUserUnSyncMessage(): Int {
+        val countMessage = databaseHelper.getUnSyncedMessage().count
+        binding.tvUserName.text = if (countMessage > 0) {
+            "${prefManager.getUserName()} ($countMessage)"
+        } else {
+            prefManager.getUserName()
+        }
+        return countMessage
     }
 }

@@ -67,6 +67,11 @@ class MessageDatabaseHelper(
         return db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $STATUS = 0", null)
     }
 
+    fun getAllMessages(): Cursor {
+        val db = readableDatabase
+        return db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+    }
+
     /**
      * Update the status of the message to 1 (synced)
      */

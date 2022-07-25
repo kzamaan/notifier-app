@@ -109,6 +109,10 @@
         <entry key="..\:/Android/SimpleLogin/app/src/main/res/layout/user_list_item.xml" value="0.13072916666666667" />
         <entry key="..\:/Android/SimpleLogin/app/src/main/res/layout/user_menu_item.xml" value="0.3625" />
         <entry key="..\:/Android/SimpleLogin/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
+        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/drawable/bg_input_field.xml" value="0.2165" />
+        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/drawable/bg_order_status.xml" value="0.2165" />
+        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/drawable/bg_white_input.xml" value="0.2165" />
+        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/drawable/ic_baseline_circle_15.xml" value="0.2165" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/drawable/ic_baseline_shopping_basket_15.xml" value="0.264" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/drawable/ic_baseline_sync_24.xml" value="0.264" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/activity_dashboard.xml" value="0.3625" />
@@ -116,8 +120,9 @@
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/dialog_user_info_layout.xml" value="0.3625" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/fragment_application_detail.xml" value="0.21829710144927536" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/fragment_login.xml" value="0.3625" />
-        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/fragment_user_history.xml" value="0.5" />
+        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/fragment_user_history.xml" value="0.33" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/model_app_list.xml" value="0.3625" />
+        <entry key="..\:/Application/Android/notifier-app/app/src/main/res/layout/model_message_list.xml" value="0.3625" />
         <entry key="..\:/Application/Android/notifier-app/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
         <entry key="..\:/Zaman/Android/android-mvvm/app/src/main/res/drawable/bg_input_field.xml" value="0.3635" />
         <entry key="..\:/Zaman/Android/android-mvvm/app/src/main/res/drawable/bg_primary_button.xml" value="0.3635" />

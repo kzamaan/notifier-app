@@ -91,4 +91,5 @@
     <string name="est_delivery_date_28_mar_2020">Est Delivery Date: 28-MAR-2020</string>
     <string name="applications">Application</string>
     <string name="sync">Sync</string>
+    <string name="history">History</string>
 </resources>
