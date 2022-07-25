@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.data.model.LocalMessage
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.collections.ArrayList
 
@@ -52,7 +54,9 @@ class MessageAdapter(
         val model = filterList[position]
         holder.androidTitle.text = model.androidTitle
         holder.androidText.text = model.androidText
-        holder.messageDate.text = model.createdAt
+        val current = LocalDateTime.parse(model.createdAt)
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+        holder.messageDate.text = current.format(formatter)
         if (model.status == 1) {
             holder.messageStatus.text = "Success"
             holder.messageStatus.setTextColor(

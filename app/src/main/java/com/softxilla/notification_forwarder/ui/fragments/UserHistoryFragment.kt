@@ -227,7 +227,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
                 }
             requestQueue.add(jsonObjRequest)
         } else {
-            Toast.makeText(mContext, "No Message to Sync", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "No Pending Message", Toast.LENGTH_SHORT).show()
         }
         return true
     }
