@@ -37,6 +37,7 @@ class MessageAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val androidTitle: TextView = view.findViewById(R.id.tv_message_title)
         val androidText: TextView = view.findViewById(R.id.tv_message_body)
+        val messageDate: TextView = view.findViewById(R.id.tv_message_date)
         val messageStatus: TextView = view.findViewById(R.id.tv_message_status)
     }
 
@@ -51,6 +52,7 @@ class MessageAdapter(
         val model = filterList[position]
         holder.androidTitle.text = model.androidTitle
         holder.androidText.text = model.androidText
+        holder.messageDate.text = model.createdAt
         if (model.status == 1) {
             holder.messageStatus.text = "Success"
             holder.messageStatus.setTextColor(
