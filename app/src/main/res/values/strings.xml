@@ -92,4 +92,5 @@
     <string name="applications">Application</string>
     <string name="sync">Sync</string>
     <string name="history">History</string>
+    <string name="pending">Pending Message</string>
 </resources>

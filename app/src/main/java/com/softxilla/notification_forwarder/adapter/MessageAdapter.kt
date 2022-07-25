@@ -64,7 +64,7 @@ class MessageAdapter(
                 R.color.success_color
             )
         } else {
-            holder.messageStatus.text = "Failed"
+            holder.messageStatus.text = "Pending"
             holder.messageStatus.setTextColor(
                 ContextCompat.getColor(
                     mContext,

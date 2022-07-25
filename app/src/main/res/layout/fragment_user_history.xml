@@ -103,6 +103,7 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
+                android:id="@+id/tvHistory"
                 style="@style/RobotoBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,7 +111,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/ten"
                 android:paddingRight="@dimen/ten"
-                android:text="@string/history"
+                android:text="@string/pending"
                 android:textAllCaps="true"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/twenty" />
