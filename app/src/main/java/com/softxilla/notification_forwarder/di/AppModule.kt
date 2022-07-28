@@ -29,16 +29,19 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    const val BASE_URL = "https://api.kzaman.me/api/"
+
     @Provides
     @Singleton
     fun providePrefManager(@ApplicationContext mContext: Context): SharedPreferences =
         mContext.getSharedPreferences("MVVMPrefInfo", Context.MODE_PRIVATE)
+
     @Provides
     @Singleton
     fun provideSharedPref(preferences: SharedPreferences) = SharedPreferenceManager(preferences)
 
     @Provides
-    fun provideBaseUrl() = "https://api.kzaman.me/api/"
+    fun provideBaseUrl() = BASE_URL
 
     @Provides
     @Singleton

@@ -10,12 +10,13 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.softxilla.notification_forwarder.data.response.OnlineResponse
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
+import com.softxilla.notification_forwarder.di.AppModule.BASE_URL
 
 fun sendNotificationPost(
     mContext: Context,
     postObject: Map<String, String>
-): Boolean {
-    val url = "https://softxilla.com/api/store-notification"
+): Boolean {2
+    val url = "${BASE_URL}store-notification"
     val requestQueue = Volley.newRequestQueue(mContext)
     val jsonObjRequest: StringRequest =
         object : StringRequest(Method.POST, url,
