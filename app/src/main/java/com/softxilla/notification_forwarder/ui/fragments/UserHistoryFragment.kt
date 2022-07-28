@@ -86,12 +86,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
 
             }
         } else {
-            val countMessage = databaseHelper.getUnSyncedMessage().count
-            binding.tvUserName.text = if (countMessage > 0) {
-                "${prefManager.getUserName()} ($countMessage)"
-            } else {
-                prefManager.getUserName()
-            }
+            binding.tvUserName.text = prefManager.getUserName()
             binding.tvPhoneNumber.text = prefManager.getUserPhone()
             binding.ivUserImage.loadImage("https://ui-avatars.com/api/?name=${prefManager.getUserName()}")
         }
