@@ -1,6 +1,7 @@
 package com.softxilla.notification_forwarder.network.api
 
 import com.softxilla.notification_forwarder.data.response.DefaultResponse
+import com.softxilla.notification_forwarder.data.response.OfflineResponse
 import com.softxilla.notification_forwarder.data.response.ProfileResponse
 import com.softxilla.notification_forwarder.network.BaseApi
 import retrofit2.http.Field
@@ -14,8 +15,9 @@ interface CommonApi : BaseApi {
     suspend fun getUserProfile(): ProfileResponse
 
     @FormUrlEncoded
-    @POST("forward-notification")
-    suspend fun forwardNotification(
-        @Field("androidTitle") androidTitle: String,
-    ): DefaultResponse
+    @POST("sync-offline-message")
+    suspend fun syncOfflineNotification(
+        @Field("msg_from") msgFrom: String,
+        @Field("messages") messages: String,
+    ): OfflineResponse
 }

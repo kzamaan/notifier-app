@@ -1,7 +1,6 @@
 package com.softxilla.notification_forwarder.ui.fragments
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -9,23 +8,19 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.AuthFailureError
-import com.android.volley.Response
-import com.android.volley.VolleyLog
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
 import com.softxilla.notification_forwarder.R
 import com.softxilla.notification_forwarder.adapter.MessageAdapter
 import com.softxilla.notification_forwarder.base.BaseFragment
 import com.softxilla.notification_forwarder.data.model.LocalMessage
-import com.softxilla.notification_forwarder.data.response.OfflineResponse
 import com.softxilla.notification_forwarder.database.MessageDatabaseHelper
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
 import com.softxilla.notification_forwarder.databinding.FragmentUserHistoryBinding
-import com.softxilla.notification_forwarder.network.NetworkHelper
+import com.softxilla.notification_forwarder.network.Resource
+import com.softxilla.notification_forwarder.ui.viewModel.CommonViewModel
 import com.softxilla.notification_forwarder.utils.LoadingUtils
+import com.softxilla.notification_forwarder.utils.handleNetworkError
 import com.softxilla.notification_forwarder.utils.loadImage
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray
@@ -40,6 +35,7 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
     private lateinit var userInfoDialog: Dialog
     private lateinit var databaseHelper: MessageDatabaseHelper
     private lateinit var messageAdapter: MessageAdapter
+    private val viewModel by viewModels<CommonViewModel>()
 
     override val layoutId: Int = R.layout.fragment_user_history
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,22 +101,11 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
             binding.syncOfflineMessage.animate()
                 .rotation(binding.syncOfflineMessage.rotation - 360f)
                 .setDuration(1000).start()
-
-            val helper = NetworkHelper(mContext)
-            if (helper.isNetworkConnected()) {
-                syncOfflineMessageToDatabase(mContext, prefManager.getUserPhone())
-            } else {
-                Toast.makeText(mContext, "No Internet Connection...", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.tvUserName.setOnClickListener {
-            refreshUserUnSyncMessage()
+            syncOfflineMessageToDatabase()
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             loadLocalMessage()
-            refreshUserUnSyncMessage()
             // stop refreshing after 1 second
             Thread {
                 try {
@@ -137,13 +122,41 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
             adapter = messageAdapter
         }
         loadLocalMessage()
+        viewModel.syncOfflineResponse.observe(viewLifecycleOwner) {
+            loadingUtils.isLoading(it is Resource.Loading)
+            when (it) {
+                is Resource.Success -> {
+                    val response = it.value
+                    Toast.makeText(mContext, response.message, Toast.LENGTH_SHORT).show()
+
+                    if (response.status) {
+                        response.offlineIds.forEach { id ->
+                            Log.d("offlineId", id)
+                            databaseHelper.updateMessageStatus(id.toInt())
+                            loadLocalMessage()
+                        }
+                    } else {
+                        if (response.offlineIds.isNotEmpty()) {
+                            response.offlineIds.forEach { id ->
+                                databaseHelper.updateMessageStatus(id.toInt())
+                                loadLocalMessage()
+                            }
+                        }
+                    }
+                }
+                is Resource.Failure -> handleNetworkError(it, mActivity) {
+                    syncOfflineMessageToDatabase()
+                }
+                else -> Log.d("unknownError", "Unknown Error")
+            }
+        }
     }
 
     private fun loadLocalMessage() {
         val messages = databaseHelper.getUnSyncedMessage()
         val localMessageList = ArrayList<LocalMessage>()
         if (messages.moveToFirst()) {
-            binding.tvHistory.text = "Pending Message"
+            binding.tvHistory.text = "Pending Message (${messages.count})"
             do {
                 val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
                 val androidTitle = messages.getColumnIndex(MessageDatabaseHelper.ANDROID_TITLE)
@@ -166,25 +179,10 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
         }
     }
 
-    private fun refreshUserUnSyncMessage(): Int {
-        val countMessage = databaseHelper.getUnSyncedMessage().count
-        binding.tvUserName.text = if (countMessage > 0) {
-            "${prefManager.getUserName()} ($countMessage)"
-        } else {
-            prefManager.getUserName()
-        }
-        return countMessage
-    }
-
-    private fun syncOfflineMessageToDatabase(
-        mContext: Context,
-        msgFrom: String,
-    ): Boolean {
-        val loadingUtils = LoadingUtils(mContext)
+    private fun syncOfflineMessageToDatabase(): Boolean {
         val messages = databaseHelper.getUnSyncedMessage()
         val jsonArray = JSONArray()
         if (messages.moveToFirst()) {
-            loadingUtils.isLoading(true)
             do {
                 val messageObject = JSONObject()
                 val rowId = messages.getColumnIndex(MessageDatabaseHelper.ID)
@@ -198,58 +196,13 @@ class UserHistoryFragment : BaseFragment<FragmentUserHistoryBinding>() {
                 jsonArray.put(messageObject)
             } while (messages.moveToNext())
 
-            val postObject: MutableMap<String, String> = HashMap()
-            postObject["messages"] = jsonArray.toString()
-            postObject["msg_from"] = msgFrom
-            Log.d("offlineMessage", postObject.toString())
-            val url = "https://softxilla.com/api/sync-offline-message"
-            val requestQueue = Volley.newRequestQueue(mContext)
+            val postObject = jsonArray.toString()
+            Log.d("offlineMessage", postObject)
 
-            val jsonObjRequest: StringRequest =
-                object : StringRequest(Method.POST, url,
-                    Response.Listener {
-                        loadingUtils.isLoading(false)
-                        val offline = Gson().fromJson(it.toString(), OfflineResponse::class.java)
-                        updateDatabaseStatus(mContext, offline)
-                    }, Response.ErrorListener { error ->
-                        loadingUtils.isLoading(false)
-                        VolleyLog.d("volley", "Error: " + error.message)
-                        error.printStackTrace()
-                    }) {
-                    override fun getBodyContentType(): String {
-                        return "application/x-www-form-urlencoded; charset=UTF-8"
-                    }
-
-                    @Throws(AuthFailureError::class)
-                    override fun getParams(): Map<String, String> {
-                        return postObject
-                    }
-                }
-            requestQueue.add(jsonObjRequest)
+            viewModel.syncOfflineNotification(prefManager.getUserPhone(), postObject)
         } else {
             Toast.makeText(mContext, "No Pending Message", Toast.LENGTH_SHORT).show()
         }
         return true
-    }
-
-    private fun updateDatabaseStatus(mContext: Context, offlineResponse: OfflineResponse) {
-        Log.d("offlineResponse", offlineResponse.toString())
-        Toast.makeText(mContext, offlineResponse.message, Toast.LENGTH_SHORT).show()
-        if (offlineResponse.status) {
-            offlineResponse.offlineIds.forEach {
-                Log.d("offlineId", it)
-                databaseHelper.updateMessageStatus(it.toInt())
-                refreshUserUnSyncMessage()
-                loadLocalMessage()
-            }
-        } else {
-            if (offlineResponse.offlineIds.isNotEmpty()) {
-                offlineResponse.offlineIds.forEach {
-                    databaseHelper.updateMessageStatus(it.toInt())
-                    refreshUserUnSyncMessage()
-                    loadLocalMessage()
-                }
-            }
-        }
     }
 }

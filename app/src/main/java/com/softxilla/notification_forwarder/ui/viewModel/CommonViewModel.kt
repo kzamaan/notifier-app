@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import com.softxilla.notification_forwarder.base.BaseViewModel
 import com.softxilla.notification_forwarder.data.response.DefaultResponse
+import com.softxilla.notification_forwarder.data.response.OfflineResponse
 import com.softxilla.notification_forwarder.network.Resource
 import com.softxilla.notification_forwarder.repository.CommonRepository
 import javax.inject.Inject
@@ -16,12 +17,13 @@ class CommonViewModel @Inject constructor(
     val repository: CommonRepository,
 ) : BaseViewModel(repository) {
 
-    private val _forwardResponse: MutableLiveData<Resource<DefaultResponse>> = MutableLiveData()
-    val forwardResponse: LiveData<Resource<DefaultResponse>> = _forwardResponse
-    fun forwardNotification(
-        androidTitle: String,
+    private val _syncOfflineResponse: MutableLiveData<Resource<OfflineResponse>> = MutableLiveData()
+    val syncOfflineResponse: LiveData<Resource<OfflineResponse>> = _syncOfflineResponse
+    fun syncOfflineNotification(
+        msgFrom: String,
+        messages: String
     ) = viewModelScope.launch {
-        _forwardResponse.value = repository.forwardNotification(androidTitle)
+        _syncOfflineResponse.value = Resource.Loading
+        _syncOfflineResponse.value = repository.syncOfflineNotification(msgFrom, messages)
     }
-
 }

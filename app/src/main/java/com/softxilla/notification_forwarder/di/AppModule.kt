@@ -38,7 +38,7 @@ object AppModule {
     fun provideSharedPref(preferences: SharedPreferences) = SharedPreferenceManager(preferences)
 
     @Provides
-    fun provideBaseUrl() = "http://203.188.245.58:7011/api/"
+    fun provideBaseUrl() = "https://api.kzaman.me/api/"
 
     @Provides
     @Singleton

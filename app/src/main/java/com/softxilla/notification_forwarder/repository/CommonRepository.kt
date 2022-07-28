@@ -8,9 +8,10 @@ class CommonRepository @Inject constructor(
     private val api: CommonApi,
 ) : BaseRepository(api) {
 
-    suspend fun forwardNotification(
-        androidTitle: String,
+    suspend fun syncOfflineNotification(
+        msgFrom: String,
+        messages: String
     ) = safeApiCall {
-        api.forwardNotification(androidTitle)
+        api.syncOfflineNotification(msgFrom, messages)
     }
 }
