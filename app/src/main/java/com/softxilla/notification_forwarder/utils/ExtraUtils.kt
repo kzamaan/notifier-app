@@ -15,7 +15,7 @@ import com.softxilla.notification_forwarder.di.AppModule.BASE_URL
 fun sendNotificationPost(
     mContext: Context,
     postObject: Map<String, String>
-): Boolean {2
+): Boolean {
     val url = "${BASE_URL}store-notification"
     val requestQueue = Volley.newRequestQueue(mContext)
     val jsonObjRequest: StringRequest =
