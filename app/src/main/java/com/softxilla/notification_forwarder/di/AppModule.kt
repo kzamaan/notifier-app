@@ -2,7 +2,6 @@ package com.softxilla.notification_forwarder.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.softxilla.notification_forwarder.BuildConfig
 import com.softxilla.notification_forwarder.network.api.AuthApi
 import com.softxilla.notification_forwarder.network.api.CommonApi
 import com.softxilla.notification_forwarder.database.SharedPreferenceManager
@@ -29,7 +28,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    const val BASE_URL = "https://api.kzaman.me/api/"
+    const val BASE_URL = "https://softxilla.com/api/"
 
     @Provides
     @Singleton
@@ -70,11 +69,9 @@ object AppModule {
             .readTimeout(40, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
             .also { client ->
-                if (BuildConfig.DEBUG) {
-                    val loggIn = HttpLoggingInterceptor()
-                    loggIn.setLevel(HttpLoggingInterceptor.Level.BODY)
-                    client.addInterceptor(loggIn)
-                }
+                val loggIn = HttpLoggingInterceptor()
+                loggIn.setLevel(HttpLoggingInterceptor.Level.BODY)
+                client.addInterceptor(loggIn)
             }.build()
     }
 
